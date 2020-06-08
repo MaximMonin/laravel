@@ -86,6 +86,8 @@
 	  float: left;
 	}
     </style>
+
+    @yield('head')
 </head>
 <body>
     <div id="app">
@@ -125,6 +127,9 @@
                                 <a class="dropdown-item" href="{{ route('profile') }}">
                                     {{ __('messages.Profile') }}
                                 </a>
+                                <a class="dropdown-item" href="{{ route('fileupload') }}">
+                                    {{ __('messages.Upload') }}
+                                </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
@@ -162,5 +167,6 @@
             @yield('content')
         </main>
     </div>
+    @yield('js')
 </body>
 </html>

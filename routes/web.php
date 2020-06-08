@@ -32,3 +32,6 @@ Route::get('/video', 'VideoController@index')->name('video');
 Route::get('/documentation', 'DocumentationController@index0')->name('documentation');
 Route::get('/documentation/{topic}', 'DocumentationController@index');
 Route::get('/contact', 'ContactController@index')->name('contact');
+
+Route::get('/user/upload', 'UserUploadController@show')->middleware('verified')->name('fileupload');
+Route::post('/upload', 'UploadController@upload')->name('upload');
