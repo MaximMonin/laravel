@@ -26,4 +26,5 @@ return [
     'Find' => 'Find',
     'Search' => 'Search',
     'CancelSearch' => 'Cancel',
+    'Upload' => 'Upload files',
 ];

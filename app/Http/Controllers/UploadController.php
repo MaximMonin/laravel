@@ -123,4 +123,14 @@ class UploadController extends Controller
 
         return $filename;
     }
+
+    public function uploaddelete(Request $request) {
+
+        $file = request ('file');
+        Storage::delete($file);
+        return response()->json([
+            'status' => true
+        ]);
+    }
+
 }

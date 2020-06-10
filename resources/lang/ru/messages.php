@@ -26,4 +26,5 @@ return [
     'Find' => 'Найти',
     'Search' => 'Поиск',
     'CancelSearch' => 'Отмена',
+    'Upload' => 'Загрузить файлы',
 ];

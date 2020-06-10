@@ -12,7 +12,7 @@
 	    letter-spacing: 0.05em;
 	}
  
-	#my-dropzone .message {
+	#documentDropzone .message {
 	    font-family: "Segoe UI Light", "Arial", serif;
 	    font-weight: 600;
 	    color: #0087F7;
@@ -23,7 +23,7 @@
 	.dropzone {
 	    border: 2px dashed #0087F7;
 	    background: white;
-	    border-radius: 5px;
+	    border-radius: 15px;
 	    min-height: 300px;
 	    padding: 90px 0;
 	    vertical-align: baseline;
@@ -34,14 +34,14 @@
 @section('content')
     <div class="row">
         <div class="col-sm-10 offset-sm-1">
-            <h2 class="page-heading">Upload your Images <span id="counter"></span></h2>
+            <h2 class="page-heading">{{ __('upload.title') }}<span id="counter"></span></h2>
             <form method="post" action="{{ url('upload') }}"
                   enctype="multipart/form-data" class="dropzone" id="documentDropzone">
                 {{ csrf_field() }}
                 <div class="dz-message">
                     <div class="col-xs-8">
                         <div class="message">
-                            <p>Drop files here or Click to Upload</p>
+                            <p>{{ __('upload.message') }}</p>
                         </div>
                     </div>
                 </div>
@@ -58,46 +58,43 @@
 <script>
   var uploadedDocumentMap = {}
   Dropzone.options.documentDropzone = {
-  @if( Request::server('HTTP_X_FORWARDED_PROTO') == 'https' )
-    url: '{{ secure_url('/upload') }}',
-  @else
-    url: '{{ url('/upload') }}',
-  @endif
+    url: '{{ url("/upload") }}',
+    parallelUploads: 3,
     maxFilesize: 500, // MB
     chunking: true,
-    chunkSize: 2000000, 
-    parallelChunkUploads: true,
+    chunkSize: 1000000, // Bytes 
+    parallelChunkUploads: false,
     retryChunks: true,
     retryChunksLimit: 3,
     addRemoveLinks: true,
+    dictFileTooBig: '{{ __("upload.FileTooBig") }}',
+    dictResponseError: '{{ __("upload.error") }}',
+    dictCancelUpload: '{{ __("upload.cancel") }}',
+    dictCancelUploadConfirmation: '{{ __("upload.cancelConfirmation") }}',
+    dictUploadCanceled: '{{ __("upload.canceled") }}',
+    dictRemoveFile: '{{ __("upload.remove") }}',
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
     },
     success: function (file, response) {
-      $('form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
-      uploadedDocumentMap[file.name] = response.name
+      if (response.name) {
+        uploadedDocumentMap[file.name] = response.path + response.name
+      }
     },
     removedfile: function (file) {
       file.previewElement.remove()
       var name = ''
-      if (typeof file.file_name !== 'undefined') {
-        name = file.file_name
-      } else {
-        name = uploadedDocumentMap[file.name]
-      }
-      $('form').find('input[name="document[]"][value="' + name + '"]').remove()
+      name = uploadedDocumentMap[file.name]
+      $.ajax({
+        url: '{{ url('/upload/delete') }}',
+        type: "POST",
+        headers: {
+          'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+        data: { 'file': name}
+      });
     },
     init: function () {
-      @if(isset($project) && $project->document)
-        var files =
-          {!! json_encode($project->document) !!}
-        for (var i in files) {
-          var file = files[i]
-          this.options.addedfile.call(this, file)
-          file.previewElement.classList.add('dz-complete')
-          $('form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
-        }
-      @endif
     }
   }
 </script>

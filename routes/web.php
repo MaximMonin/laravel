@@ -35,3 +35,4 @@ Route::get('/contact', 'ContactController@index')->name('contact');
 
 Route::get('/user/upload', 'UserUploadController@show')->middleware('verified')->name('fileupload');
 Route::post('/upload', 'UploadController@upload')->name('upload');
+Route::post('/upload/delete', 'UploadController@uploaddelete')->name('uploaddelete');
