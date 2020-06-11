@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         \Pion\Laravel\ChunkUpload\Providers\ChunkUploadServiceProvider::class,
+        App\Providers\NextCloudServiceProvider::class,
     ],
 
     /*

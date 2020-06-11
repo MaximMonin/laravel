@@ -37,7 +37,7 @@ class UploadController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-            return $this->saveFile($save->getFile());
+            return $this->saveFileToNextCloud($save->getFile());
         }
 
         // we are in chunk mode, lets send the current progress
@@ -74,6 +74,25 @@ class UploadController extends Controller
 
         return response()->json([
             'path' => $disk->url($fileName),
+            'name' => $fileName,
+            'mime_type' =>$mime
+        ]);
+    }
+
+    protected function saveFileToNextCloud($file)
+    {
+        $fileName = $this->createFilename($file);
+
+        $disk = Storage::disk('nextcloud');
+        $disk->putFileAs('ioblikdocs', $file, $fileName);
+
+        $mime = str_replace('/', '-', $file->getMimeType());
+
+        // We need to delete the file when uploaded to nextcloud
+        unlink($file->getPathname());
+
+        return response()->json([
+            'path' => 'ioblikdocs/',
             'name' => $fileName,
             'mime_type' =>$mime
         ]);
@@ -125,9 +144,9 @@ class UploadController extends Controller
     }
 
     public function uploaddelete(Request $request) {
-
         $file = request ('file');
-        Storage::delete($file);
+        Storage::disk('nextcloud')->delete($file);
+
         return response()->json([
             'status' => true
         ]);
