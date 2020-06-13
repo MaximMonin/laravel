@@ -63,7 +63,7 @@
     maxFilesize: 500, // MB
     chunking: true,
     chunkSize: 1000000, // Bytes 
-    parallelChunkUploads: false,
+    parallelChunkUploads: true,
     retryChunks: true,
     retryChunksLimit: 3,
     addRemoveLinks: true,

@@ -8,6 +8,9 @@ use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use App\Jobs\MoveFileToNextcloud;
+
+use Illuminate\Support\Facades\Log;
 
 class UploadController extends Controller
 {
@@ -82,14 +85,13 @@ class UploadController extends Controller
     protected function saveFileToNextCloud($file)
     {
         $fileName = $this->createFilename($file);
-
-        $disk = Storage::disk('nextcloud');
-        $disk->putFileAs('ioblikdocs', $file, $fileName);
-
         $mime = str_replace('/', '-', $file->getMimeType());
 
-        // We need to delete the file when uploaded to nextcloud
-        unlink($file->getPathname());
+        $finalPath = storage_path("app/chunks/");
+        $file->move($finalPath, $fileName);
+        
+        $targetPath = 'ioblikdocs';
+        MoveFileToNextcloud::dispatch ($targetPath, $finalPath . $fileName, $fileName);
 
         return response()->json([
             'path' => 'ioblikdocs/',
