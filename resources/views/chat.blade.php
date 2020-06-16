@@ -4,31 +4,21 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-sm-10 offset-sm-1">
-            <h2 class="page-heading">{{ __('upload.title') }}<span id="counter"></span></h2>
-            <form method="post" action="{{ url('upload') }}"
-                  enctype="multipart/form-data" class="dropzone" id="documentDropzone">
-                {{ csrf_field() }}
-                <div class="dz-message">
-                    <div class="col-xs-8">
-                        <div class="message">
-                            <p>{{ __('upload.message') }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="fallback">
-                    <input type="file" name="file" multiple>
-                </div>
-            </form>
-        </div>
-    </div>
-@endsection
+		<div id='app'></div>
+		<div class="flex-center position-ref full-height">
+			<div class="content">
+				<div class="title m-b-md">
+					Laravel Event Broadcasting
+				</div>
+				<div class="links">
+					<button onclick="callEvent()" class="btn btn-primary">Call event</button>
+				</div>
+			</div>
+		</div>@endsection
 
 @section('js')
-<script src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script>
-<script>
-Echo.channel('chat.0')
+<script defer>
+ Echo.channel('chat.0')
 	  .listen('ChatMessage', (msg) => {
 			alert(msg.chatMessage);
 	  })

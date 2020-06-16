@@ -21,7 +21,7 @@ class UserUploadController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function show()
+    public function show(Request $request)
     {
         return view('fileupload');
     }

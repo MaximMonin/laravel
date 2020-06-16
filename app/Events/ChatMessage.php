@@ -23,7 +23,7 @@ class ChatMessage
      *
      * @return void
      */
-    public function __construct(Comment $comment)
+    public function __construct($comment)
     {
        $this->comment = $comment;
     }
@@ -35,12 +35,13 @@ class ChatMessage
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chat.'.$this->comment->chat_id); 
+        return new PrivateChannel('chat.0'); 
     }
-    public function broadcastWith()
-    {
-        return [
-            'view' => view('chat.comments', ['i' => $this->comment])->render()
-        ];
-    }
+
+//    public function broadcastWith()
+//    {
+//        return [
+//            'view' => view('chatcomments', ['i' => $this->comment])->render()
+//        ];
+//    }
 }

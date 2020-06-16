@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" type="text/javascript" defer></script>
+    <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -129,6 +129,9 @@
                                 </a>
                                 <a class="dropdown-item" href="{{ route('fileupload') }}">
                                     {{ __('messages.Upload') }}
+                                </a>
+                                <a class="dropdown-item" href="{{ route('chat') }}">
+                                    {{ __('messages.Chat') }}
                                 </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
