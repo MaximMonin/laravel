@@ -18,9 +18,9 @@
 
 @section('js')
 <script defer>
- Echo.channel('chat.0')
+ Echo.channel('private-chat.0')
 	  .listen('ChatMessage', (msg) => {
-			alert(msg.chatMessage);
+			alert(JSON.stringify(msg));
 	  })
 		
 function callEvent(){

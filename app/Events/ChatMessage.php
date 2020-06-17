@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Comment;
 
-class ChatMessage
+class ChatMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
