@@ -38,3 +38,8 @@ window.Echo = new EchoLibrary({
     host: window.location.hostname + '/socket.io'
 });
 
+//window.Echo = new EchoLibrary({
+//   broadcaster: 'socket.io',
+//    host: '10.22.10.100:6001'
+//});
+

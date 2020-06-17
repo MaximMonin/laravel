@@ -17,10 +17,9 @@
 		</div>@endsection
 
 @section('js')
-<script defer>
- Echo.channel('chat.0')
-	  .listen('ChatMessage', (msg) => {
-			alert(msg.chatMessage);
+<script>
+ Echo.channel('chat.0').listen('ChatMessage', (msg) => {
+			alert(msg);
 	  })
 		
 function callEvent(){
