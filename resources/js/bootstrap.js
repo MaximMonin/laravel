@@ -33,8 +33,17 @@ window.io = require('socket.io-client');
 
 import EchoLibrary from "laravel-echo"
 
+if (window.location.protocol == 'https:') // Under Nginx proxy
+{
 window.Echo = new EchoLibrary({
     broadcaster: 'socket.io',
-    host: window.location.hostname
+    host: window.location.hostname,
 });
+}
+else {                                   // Direct connect
+window.Echo = new EchoLibrary({
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001'
+});
+}
 
