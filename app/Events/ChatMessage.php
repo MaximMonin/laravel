@@ -16,7 +16,14 @@ class ChatMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $comment;
+    /**
+      * The name of the queue on which to place the event.
+      *
+      * @var string
+    */
+    public $broadcastQueue = 'broadcast';
+
+    public $comment;
 
     /**
      * Create a new event instance.

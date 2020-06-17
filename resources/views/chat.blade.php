@@ -18,11 +18,10 @@
 
 @section('js')
 <script>
- Echo.channel('private-chat.0')
-	  .listen('ChatMessage', (msg) => {
+  Echo.channel('private-chat.0').listen('ChatMessage', (msg) => {
 			alert(JSON.stringify(msg));
-		
-function callEvent(){
+  });		
+  function callEvent(){
 	axios.get('/call-event')
 		.then((response) => {
 			
@@ -30,6 +29,6 @@ function callEvent(){
 		.catch(function (error) {
 			console.log(error);
 		});
-}  
+  }  
 </script>
 @endsection
