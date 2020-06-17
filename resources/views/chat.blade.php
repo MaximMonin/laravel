@@ -17,11 +17,10 @@
 		</div>@endsection
 
 @section('js')
-<script defer>
+<script>
  Echo.channel('private-chat.0')
 	  .listen('ChatMessage', (msg) => {
 			alert(JSON.stringify(msg));
-	  })
 		
 function callEvent(){
 	axios.get('/call-event')
