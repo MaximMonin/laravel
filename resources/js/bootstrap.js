@@ -35,11 +35,6 @@ import EchoLibrary from "laravel-echo"
 
 window.Echo = new EchoLibrary({
     broadcaster: 'socket.io',
-    host: window.location.hostname + '/socket.io'
+    host: window.location.hostname
 });
-
-//window.Echo = new EchoLibrary({
-//   broadcaster: 'socket.io',
-//    host: '10.22.10.100:6001'
-//});
 
