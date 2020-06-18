@@ -10,7 +10,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ mix('js/manifest.js') }}" type="text/javascript"></script>
+    <script src="{{ mix('js/vendor.js') }}" type="text/javascript"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -170,6 +171,7 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
     @yield('js')
 </body>
 </html>

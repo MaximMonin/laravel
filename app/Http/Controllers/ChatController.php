@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Message;
 use App\Events\ChatMessage;
-use App\Comment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
@@ -19,23 +20,41 @@ class ChatController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show chats
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function index()
     {
         return view('chat');
     }
 
-    public function comment(Request $request)
+    /**
+     * Fetch all messages
+     *
+     * @return Message
+     */
+    public function fetchMessages()
     {
-        /**
-         * Âàëèäàöèÿ. Äîáàâëÿş ñîîáùåíèå â áàçó,
-         * ïîëó÷àş ìîäåëü Comment $comment ñ ñîîáùåíèåì
-         */
-        $comment = request ('comment');
+        return Message::with('user')->get();
+    }
 
-        broadcast(new ChatMessage($comment))->toOthers(); // Îòïğàâëÿş ñîîáùåíèå âñåì, êğîìå òåêóùåãî ïîëüçîâàòåëÿ
+    /**
+     * Persist message to database
+     *
+     * @param  Request $request
+     * @return Response
+     */
+    public function sendMessage(Request $request)
+    {
+        $user = Auth::user();
+
+        $message = $user->messages()->create([
+            'message' => $request->input('message')
+        ]);
+
+        broadcast(new ChatMessage($user, $message))->toOthers();
+
+        return ['status' => 'Message Sent!'];
     }
 }

@@ -20,7 +20,6 @@ try {
  */
 
 window.axios = require('axios');
-
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
@@ -30,7 +29,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 window.io = require('socket.io-client');
-
 import EchoLibrary from "laravel-echo"
 
 if (window.location.protocol == 'https:') // Under Nginx proxy

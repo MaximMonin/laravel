@@ -9,8 +9,9 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\User;
+use App\Message;
 
-use App\Comment;
 
 class ChatMessage implements ShouldBroadcast
 {
@@ -23,17 +24,19 @@ class ChatMessage implements ShouldBroadcast
     */
     public $broadcastQueue = 'broadcast';
 
-    public $comment;
+    public $user;
+    public $message;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($comment)
+     public function __construct(User $user, Message $message)
     {
-       $this->comment = $comment;
-    }
+        $this->user = $user;
+        $this->message = $message;
+    }   
 
     /**
      * Get the channels the event should broadcast on.
@@ -44,15 +47,4 @@ class ChatMessage implements ShouldBroadcast
     {
         return new PrivateChannel('chat.0'); 
     }
-//    public function broadcastAs() 
-//   {
-//        return 'ChatMessage';
-//   }
-
-//    public function broadcastWith()
-//    {
-//        return [
-//            'view' => view('chatcomments', ['i' => $this->comment])->render()
-//        ];
-//    }
 }

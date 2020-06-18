@@ -15,4 +15,5 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .copy('node_modules/popper.js/dist/popper.js.map', 'public/js/popper.js.map')   
     .copy('node_modules/dropzone/dist/dropzone.js', 'public/js/dropzone.js')
-    .copy('node_modules/dropzone/dist/dropzone.css', 'public/css/dropzone.css');
+    .copy('node_modules/dropzone/dist/dropzone.css', 'public/css/dropzone.css')
+    .extract(['jquery', 'bootstrap', 'lodash', 'popper.js', 'vue', 'axios']);
