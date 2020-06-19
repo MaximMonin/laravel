@@ -92,6 +92,7 @@
 </head>
 <body>
     <div id="app">
+      <v-app>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a href="{{ url('/') }}">
@@ -170,6 +171,7 @@
         <main class="py-4">
             @yield('content')
         </main>
+      <v-app>
     </div>
     <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
     @yield('js')
