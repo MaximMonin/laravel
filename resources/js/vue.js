@@ -6,8 +6,8 @@
 
 window.Vue = require('vue');
 
-import Vuetify from "vuetify";
-Vue.use(Vuetify);
+import BootstrapVue from 'bootstrap-vue';
+Vue.use(BootstrapVue); 
 import Vue2Editor from "vue2-editor";
 Vue.use (Vue2Editor);
 
@@ -18,5 +18,4 @@ Vue.component('chat-form', require('./components/ChatForm.vue').default);
 
 const app = new Vue({
     el: '#app',
-    vuetify: new Vuetify(),    
 });
