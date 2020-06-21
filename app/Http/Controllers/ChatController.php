@@ -26,7 +26,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return view('chat');
+        return view('chat', ['messages' => $this->fetchMessages()] );
     }
 
     /**
@@ -36,7 +36,7 @@ class ChatController extends Controller
      */
     public function fetchMessages()
     {
-        return Message::with('user')->get();
+       return Message::latest()->take(15)->with('user')->get();
     }
 
     /**

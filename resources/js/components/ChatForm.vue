@@ -20,7 +20,7 @@
         },
         methods: {
             sendMessage() {
-                this.$emit('messagesent', {
+                this.$eventBus.$emit('newchatmessage', {
                     user: this.user,
                     message: this.newMessage
                 });

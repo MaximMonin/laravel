@@ -38,5 +38,4 @@ Route::post('/upload', 'UploadController@upload')->name('upload');
 Route::post('/upload/delete', 'UploadController@uploaddelete')->name('uploaddelete');
 
 Route::get('/user/chat', 'ChatController@index')->middleware('verified')->name('chat');
-Route::get('/user/chat/messages', 'ChatController@fetchMessages');
 Route::post('/user/chat/messages', 'ChatController@sendMessage');
