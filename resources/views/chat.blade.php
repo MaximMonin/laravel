@@ -16,16 +16,28 @@
             margin: 0;
             color: #777777;
         }
-        .panel-body {
-            overflow-y: scroll;
-            height: 350px;
+        .chat-client-body {
+           height: 750px;
+           position: relative;
+        }
+
+        .chat-client-conversation {
+           padding: 0 12px;
+           overflow-y: auto;
+           overflow-x: hidden;
+           position: absolute;
+           bottom: 0; left: 0; right: 0;
+           max-height: 100%;
+        }
+        .panel-footer {
+           padding-top: 20px;
         }
         ::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
             background-color: #F5F5F5;
         }
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 3px;
             background-color: #F5F5F5;
         }
         ::-webkit-scrollbar-thumb {
@@ -42,8 +54,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Chats</div>
 
-                <div class="panel-body">
-                    <chat-messages :messages="{{$messages}}" v-bind:style="{width: '100%', height: '100%'}"></chat-messages>
+                <div class="chat-client-body border">
+                  <chat-messages :messages="{{$messages}}"></chat-messages>
                 </div>
                 <div class="panel-footer">
                     <chat-form

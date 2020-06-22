@@ -1,4 +1,5 @@
 <template>
+  <div class="chat-client-conversation" ref="id">
     <ul class="chat">
         <li class="left clearfix" v-for="message in orderedmessages">
             <div class="chat-body clearfix">
@@ -13,6 +14,7 @@
             </div>
         </li>
     </ul>
+  </div>
 </template>
 
 <script>
@@ -39,13 +41,20 @@ export default {
      this.$eventBus.$on('newchatmessage', (message) => {
        this.addMessage(message)
      })
+     this.scrollToBottom();
+  },
+  updated() {
+     this.scrollToBottom();
   },
 
   methods: {
         addMessage(message) {
             this.vmessages.push(message);
             axios.post('/user/chat/messages', message).then(response => {});
+        },
+        scrollToBottom () {
+            this.$refs.id.scrollTop = this.$refs.id.scrollHeight;
         }
-  }
+  },
 };
 </script>
