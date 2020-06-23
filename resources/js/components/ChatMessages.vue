@@ -25,8 +25,7 @@ export default {
       vmessages: this.messages,
       pages: 0,
       isLoading: false,
-      allPages: false,
-      newmessages: null
+      allPages: false
     }
   },
   computed: {
