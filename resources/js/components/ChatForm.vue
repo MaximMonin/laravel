@@ -22,7 +22,8 @@
             sendMessage() {
                 this.$eventBus.$emit('newchatmessage', {
                     user: this.user,
-                    message: this.newMessage
+                    message: this.newMessage,
+                    id: 0
                 });
                 this.newMessage = ''
             }

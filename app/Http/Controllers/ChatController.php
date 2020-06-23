@@ -36,7 +36,7 @@ class ChatController extends Controller
      */
     public function fetchMessages()
     {
-       return Message::latest()->take(100)->with('user')->get();
+       return Message::latest()->with('user')->paginate(50)->getCollection();
     }
 
     /**
