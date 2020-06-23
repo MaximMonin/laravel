@@ -17,7 +17,7 @@
             color: #777777;
         }
         .chat-client-body {
-           height: 750px;
+           height: calc(100vh - 170px);
            position: relative;
         }
 
@@ -29,8 +29,12 @@
            bottom: 0; left: 0; right: 0;
            max-height: 100%;
         }
+        .panel-heading {
+           height: 20px
+        }
         .panel-footer {
-           padding-top: 20px;
+           padding-top: 10px;
+           height: 50px
         }
         ::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
