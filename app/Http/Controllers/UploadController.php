@@ -8,7 +8,7 @@ use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
-use App\Jobs\MoveFileToNextcloud;
+use App\Jobs\MoveFileToRemoteStorage;
 
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +24,11 @@ class UploadController extends Controller
      * @throws UploadMissingFileException
      * @throws \Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException
      */
-    public function upload(Request $request) {
+    public function upload0(Request $request) {
+      return $this->upload ($request, 'local');
+    }
+
+    public function upload(Request $request, $storage) {
         // create the file receiver
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
 
@@ -40,7 +44,7 @@ class UploadController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-            return $this->saveFileToNextCloud($save->getFile());
+            return $this->saveFile($save->getFile(), $storage);
         }
 
         // we are in chunk mode, lets send the current progress
@@ -60,13 +64,25 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    protected function saveFile($file, $storage)
+    {
+//       Log::info('savefile: ' . 'storage: ' . $storage . ' file: ' . $file->getClientOriginalName());
+       if ($storage == '' || $storage == 'local') {
+          return $this->saveFileLocal($file);
+       }
+       if ($storage == 's3') { 
+          return $this->saveFileToS3($file);
+       }
+       return $this->saveFileRemote($file, $storage);
+
+    }
     protected function saveFileToS3($file)
     {
         $fileName = $this->createFilename($file);
 
         $disk = Storage::disk('s3');
         // It's better to use streaming Streaming (laravel 5.4+)
-        $disk->putFileAs('photos', $file, $fileName);
+        $disk->putFileAs('files', $file, $fileName);
 
         // for older laravel
         // $disk->put($fileName, file_get_contents($file), 'public');
@@ -82,7 +98,7 @@ class UploadController extends Controller
         ]);
     }
 
-    protected function saveFileToNextCloud($file)
+    protected function saveFileRemote($file, $storage)
     {
         $fileName = $this->createFilename($file);
         $mime = str_replace('/', '-', $file->getMimeType());
@@ -90,11 +106,11 @@ class UploadController extends Controller
         $finalPath = storage_path("app/chunks/");
         $file->move($finalPath, $fileName);
         
-        $targetPath = 'ioblikdocs';
-        MoveFileToNextcloud::dispatch ($targetPath, $finalPath . $fileName, $fileName);
+        $targetPath = 'files';
+        MoveFileToRemoteStorage::dispatch ($storage, $targetPath, $finalPath . $fileName, $fileName);
 
         return response()->json([
-            'path' => 'ioblikdocs/',
+            'path' => 'files/',
             'name' => $fileName,
             'mime_type' =>$mime
         ]);
@@ -107,7 +123,7 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function saveFile(UploadedFile $file)
+    protected function saveFileLocal(UploadedFile $file)
     {
         $fileName = $this->createFilename($file);
         // Group files by mime type
@@ -145,9 +161,16 @@ class UploadController extends Controller
         return $filename;
     }
 
-    public function uploaddelete(Request $request) {
+    public function uploaddelete0(Request $request) {
+      return $this->uploaddelete ($request, 'local');
+      
+    }
+    public function uploaddelete(Request $request, $storage) {
         $file = request ('file');
-        Storage::disk('nextcloud')->delete($file);
+
+//       Log::info('deletefile: ' . 'storage: ' . $storage . ' file: ' . $file);
+
+        Storage::disk($storage)->delete($file);
 
         return response()->json([
             'status' => true

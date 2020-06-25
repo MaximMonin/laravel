@@ -23,6 +23,6 @@ class UserUploadController extends Controller
      */
     public function show(Request $request)
     {
-        return view('fileupload');
+        return view('fileupload', ['storage' => 'nextcloud']);
     }
 }

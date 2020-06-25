@@ -35,7 +35,7 @@
     <div class="row">
         <div class="col-sm-10 offset-sm-1">
             <h2 class="page-heading">{{ __('upload.title') }}<span id="counter"></span></h2>
-            <form method="post" action="{{ url('upload') }}"
+            <form method="post" action='{{ url("/upload/$storage") }}'
                   enctype="multipart/form-data" class="dropzone" id="documentDropzone">
                 {{ csrf_field() }}
                 <div class="dz-message">
@@ -58,7 +58,7 @@
 <script>
   var uploadedDocumentMap = {}
   Dropzone.options.documentDropzone = {
-    url: '{{ url("/upload") }}',
+    url: '{{ url("/upload/$storage") }}',
     parallelUploads: 3,
     maxFilesize: 500, // MB
     chunking: true,
@@ -85,14 +85,7 @@
       file.previewElement.remove()
       var name = ''
       name = uploadedDocumentMap[file.name]
-      $.ajax({
-        url: '{{ url('/upload/delete') }}',
-        type: "POST",
-        headers: {
-          'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        },
-        data: { 'file': name}
-      });
+      axios.post('{{ url("/upload/$storage/delete") }}', { 'file': name}).then(response => {});
     },
     init: function () {
     }

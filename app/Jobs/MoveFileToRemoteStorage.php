@@ -11,10 +11,11 @@ use Illuminate\Queue\SerializesModels;
 use Storage;
 use Illuminate\Http\File;
 
-class MoveFileToNextcloud implements ShouldQueue
+class MoveFileToRemoteStorage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $storage;
     protected $targetPath;
     protected $file;
     protected $targetFile;
@@ -24,8 +25,9 @@ class MoveFileToNextcloud implements ShouldQueue
      *
      * @return void
      */
-    public function __construct( $tDir, $ifile, $tFile)
+    public function __construct( $tStorage, $tDir, $ifile, $tFile)
     {
+       $this->storage = $tStorage;
        $this->targetPath = $tDir;
        $this->file = $ifile;
        $this->targetFile = $tFile;
@@ -38,10 +40,10 @@ class MoveFileToNextcloud implements ShouldQueue
      */
     public function handle()
     {
-       // Copy file to Nextcloud Storage 
-       $disk = Storage::disk('nextcloud');
+       // Copy file to Remote Storage 
+       $disk = Storage::disk($this->storage);
        $disk->putFileAs($this->targetPath, new File ($this->file), $this->targetFile);
-       // We need to delete the file when uploaded to nextcloud
+       // We need to delete the file when uploaded to storage
        unlink($this->file);
     }
 }

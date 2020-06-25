@@ -34,8 +34,10 @@ Route::get('/documentation/{topic}', 'DocumentationController@index');
 Route::get('/contact', 'ContactController@index')->name('contact');
 
 Route::get('/user/upload', 'UserUploadController@show')->middleware('verified')->name('fileupload');
-Route::post('/upload', 'UploadController@upload')->name('upload');
-Route::post('/upload/delete', 'UploadController@uploaddelete')->name('uploaddelete');
+Route::post('/upload', 'UploadController@upload0')->name('upload');
+Route::post('/upload/delete', 'UploadController@uploaddelete0')->name('uploaddelete');
+Route::post('/upload/{storage}', 'UploadController@upload');
+Route::post('/upload/{storage}/delete', 'UploadController@uploaddelete');
 Route::get('/download/{storage}/{file}', 'DownloadController@download')->where('file', '.*');
 Route::get('/file/{storage}/{file}', 'DownloadController@loadfile')->where('file', '.*');
 
