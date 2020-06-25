@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Pion\Laravel\ChunkUpload\Providers\ChunkUploadServiceProvider::class,
         App\Providers\NextCloudServiceProvider::class,
+        App\Providers\SftpServiceProvider::class,
     ],
 
     /*

@@ -72,6 +72,21 @@ return [
             'password'   => env('WEBDAV_PASSWORD'),
 	    'pathPrefix' => '', 
 	],
+        'sftp' => [
+            'driver'     => 'sftp',
+            'host'       => env('SFTP_SERVER'),
+            'port'       => 22,
+            'username'   => env('SFTP_USER'),
+            'password'   => env('SFTP_PASSWORD'),
+            'timeout'    => 10,
+            'root'       => env('SFTP_ROOTPATH'),
+            // 'privateKey' => 'path/to/or/contents/of/privatekey',
+            // 'root'       => '/path/to/root',
+            // 'visibility' => 'public',
+            // 'pirate'     => false,
+            // 'eventable'  => true,
+            // 'cache'      => 'foo'
+        ],
     ],
 
     /*
