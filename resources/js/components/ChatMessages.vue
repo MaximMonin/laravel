@@ -16,7 +16,42 @@
     </ul>
   </div>
 </template>
-
+<style>
+        .chat {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .chat li {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #B3A9A9;
+        }
+        .chat li .chat-body p {
+            margin: 0;
+            color: #777777;
+        }
+        .chat-client-conversation {
+           padding: 0 12px;
+           overflow-y: auto;
+           overflow-x: hidden;
+           position: absolute;
+           bottom: 0; left: 0; right: 0;
+           max-height: 100%;
+        }
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+        ::-webkit-scrollbar {
+            width: 3px;
+            background-color: #F5F5F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+</style>
 <script>
 export default {
   props: ['messages'],
@@ -33,7 +68,7 @@ export default {
       return _.orderBy(this.vmessages, 'id')
     },
     maxid: function () {
-      if (this.orderedmessages !== null) {
+      if (this.orderedmessages !== null && this.vmessages.length > 0 ) {
         return this.orderedmessages[this.vmessages.length - 1].id;
       }
       return 0;
