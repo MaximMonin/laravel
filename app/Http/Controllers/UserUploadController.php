@@ -23,6 +23,6 @@ class UserUploadController extends Controller
      */
     public function show(Request $request)
     {
-        return view('fileupload', ['storage' => 'sftp']);
+        return view('fileupload', ['storage' => 'cdn']);
     }
 }
