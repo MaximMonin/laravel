@@ -9,9 +9,9 @@
            padding-top: 10px;
            height: 50px
         }
-        .chat-client-body {
-           height: calc(100vh - 170px);
+        .panel-body {
            position: relative;
+           height: 700px
         }
 </style>
 @endsection
@@ -23,7 +23,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Chats</div>
 
-                <div class="chat-client-body border">
+                <div class="border panel-body" id="chatContainer">
                   <chat-messages :messages="{{$messages}}"></chat-messages>
                 </div>
                 <div class="panel-footer">
@@ -38,4 +38,12 @@
 @endsection
 
 @section('js')
+    <script>      
+       window.addEventListener("resize", onResize);
+       onResize();
+       function onResize() {
+         var calcheight = window.innerHeight - document.getElementById("appBar").offsetHeight - 115;
+         document.getElementById("chatContainer").style.height = calcheight + "px";
+       }
+    </script>      
 @endsection

@@ -33,7 +33,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" id="appBar">
             <div class="container">
                 <a href="{{ url('/') }}">
 		  <img src="/images/milkiland_logo.png">
