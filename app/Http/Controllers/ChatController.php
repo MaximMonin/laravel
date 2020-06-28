@@ -26,7 +26,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return view('chat', ['messages' => $this->fetchMessages()] );
+        return view('chat');
     }
 
     /**

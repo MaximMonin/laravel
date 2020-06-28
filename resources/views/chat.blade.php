@@ -24,7 +24,9 @@
                 <div class="panel-heading">Chats</div>
 
                 <div class="border panel-body" id="chatContainer">
-                  <chat-messages :messages="{{$messages}}"></chat-messages>
+                  <chat-messages>
+                        :user="{{ Auth::user() }}"
+                  </chat-messages>
                 </div>
                 <div class="panel-footer">
                     <chat-form

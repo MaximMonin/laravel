@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-client-conversation" ref="id">
+  <div class="chat-client-conversation" ref="id" @scroll="handleScroll">
     <ul class="chat">
         <li class="left clearfix" v-for="message in orderedmessages">
             <div class="chat-body clearfix">
@@ -54,10 +54,10 @@
 </style>
 <script>
 export default {
-  props: ['messages'],
+  props: ['user'],
   data: function () {
     return {
-      vmessages: this.messages,
+      messages: [],
       pages: 0,
       isLoading: false,
       allPages: false
@@ -65,57 +65,64 @@ export default {
   },
   computed: {
     orderedmessages: function () {
-      return _.orderBy(this.vmessages, 'id')
+      return _.orderBy(this.messages, 'id')
     },
     maxid: function () {
-      if (this.orderedmessages !== null && this.vmessages.length > 0 ) {
-        return this.orderedmessages[this.vmessages.length - 1].id;
+      if (this.orderedmessages !== null && this.messages.length > 0 ) {
+        return this.orderedmessages[this.messages.length - 1].id;
       }
       return 0;
     }
   },
-  destroyed () {
-    this.$refs.id.removeEventListener('scroll', this.handleScroll);
-  },
   mounted() {
-     this.$refs.id.addEventListener('scroll', this.handleScroll);
-
+     this.fetchMessages ();
      Echo.private('chat.0')
         .listen('ChatMessage', (e) => {
-           this.vmessages.push({
+           this.messages.push({
              id: e.message.id,
              message: e.message.message,
              user: e.user
            });
         });
 
-     this.$eventBus.$on('newchatmessage', (message) => {
+     Event.listen('newchatmessage', (message) => {
        this.addMessage(message)
      });
 
      this.scrollToBottom();
-     this.pages = parseInt (this.vmessages.length / 50, 10);
+     this.pages = parseInt (this.messages.length / 50, 10);
   },
   updated() {
      if (this.isLoading == false) {
        this.scrollToBottom();
      }
-     this.pages = parseInt (this.vmessages.length / 50, 10);    
+     this.pages = parseInt (this.messages.length / 50, 10);    
      this.isLoading = false;
   },
 
   methods: {
         addMessage(message) {
             message.id = this.maxid + 1;
-            this.vmessages.push(message);
+            this.messages.push(message);
             axios.post('/user/chat/messages', message).then(response => {});
         },
         scrollToBottom () {
             this.$refs.id.scrollTop = this.$refs.id.scrollHeight;
         },
-        // Autoload old messages while scrolling up
+        fetchMessages () {
+          axios.get('/user/chat/messages').then(response => {
+            if (response !== null) {
+              var i;
+              for (i = 0; i < response.data.length; i++) {
+                 this.messages.push(response.data[i]);
+              }
+            }
+          });
+        },
+
         handleScroll() {
-           if (this.$refs.id.scrollTop < 300 && this.isLoading == false && this.allPages == false) {
+           // Autoload old messages while scrolling up
+           if (this.$refs.id.scrollTop < 500 && this.isLoading == false && this.allPages == false) {
              this.isLoading = true;
              axios.get('/user/chat/messages?page=' + (this.pages + 1) ).then(response => {
                if (response !== null) {
@@ -125,13 +132,13 @@ export default {
                  // Check message in array already 
                  for (i = 0; i < response.data.length; i++) {
                    isfound = false;
-                   for (j = 0; j < this.vmessages.length; j++) {
-                     if (this.vmessages[j].id == response.data[i].id) {
+                   for (j = 0; j < this.messages.length; j++) {
+                     if (this.messages[j].id == response.data[i].id) {
                        isfound = true;
                      }
                    }
                    if (!isfound) {
-                     this.vmessages.push(response.data[i]);
+                     this.messages.push(response.data[i]);
                    }
                  }
                }

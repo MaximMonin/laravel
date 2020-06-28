@@ -11,7 +11,12 @@ Vue.use(BootstrapVue);
 import Vue2Editor from "vue2-editor";
 Vue.use (Vue2Editor);
 
-Vue.prototype.$eventBus = new Vue(); // Global event bus
+// Vue event bus
+window.Event = new class {
+  constructor () { this.vue = new Vue (); }
+  emit (event, data = null) { this.vue.$emit (event, data); }
+  listen (event, callback) { this.vue.$on (event, callback); }
+}
 
 Vue.component('chat-messages', require('./components/ChatMessages.vue').default);
 Vue.component('chat-form', require('./components/ChatForm.vue').default);
