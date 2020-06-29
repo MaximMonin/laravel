@@ -31,6 +31,8 @@ class UploadController extends Controller
     public function upload(Request $request, $storage) {
         // create the file receiver
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
+        $filedir = $request->input('filedir');
+        $action = $request->input('action');
 
         // check if the upload is success, throw exception or return response you need
         if ($receiver->isUploaded() === false) {
@@ -44,7 +46,7 @@ class UploadController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-            return $this->saveFile($save->getFile(), $storage);
+            return $this->saveFile($save->getFile(), $storage, $filedir, $action);
         }
 
         // we are in chunk mode, lets send the current progress
@@ -64,28 +66,28 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function saveFile($file, $storage)
+    protected function saveFile($file, $storage, $filedir, $action)
     {
-//       Log::info('savefile: ' . 'storage: ' . $storage . ' file: ' . $file->getClientOriginalName());
-       if ($storage == '' || $storage == 'local') {
-          return $this->saveFileLocal($file);
-       }
-       if ($storage == 's3') { 
-          return $this->saveFileToS3($file);
-       }
-       return $this->saveFileRemote($file, $storage);
+//       Log::info('savefile: ' . 'storage: ' . $storage . ' file: ' . $file->getClientOriginalName() . " filedir: " . $filedir . " action:" . $action);
 
+       if ($storage == '' || $storage == 'local') {
+          $rc = $this->saveFileLocal($file, $filedir);
+       }  
+       elseif ($storage == 's3') { 
+          $rc = $this->saveFileToS3($file, $filedir);
+       }
+       else $rc = $this->saveFileRemote($file, $storage, $filedir);
+
+       if ($action == 'SaveDatabase') {
+       }
+       return $rc;
     }
-    protected function saveFileToS3($file)
+    protected function saveFileToS3($file, $filedir)
     {
         $fileName = $this->createFilename($file);
 
         $disk = Storage::disk('s3');
-        // It's better to use streaming Streaming (laravel 5.4+)
-        $disk->putFileAs('files', $file, $fileName);
-
-        // for older laravel
-        // $disk->put($fileName, file_get_contents($file), 'public');
+        $disk->putFileAs($filedir, $file, $fileName);
         $mime = str_replace('/', '-', $file->getMimeType());
 
         // We need to delete the file when uploaded to s3
@@ -98,7 +100,7 @@ class UploadController extends Controller
         ]);
     }
 
-    protected function saveFileRemote($file, $storage)
+    protected function saveFileRemote($file, $storage, $filedir)
     {
         $fileName = $this->createFilename($file);
         $mime = str_replace('/', '-', $file->getMimeType());
@@ -106,11 +108,11 @@ class UploadController extends Controller
         $finalPath = storage_path("app/chunks/");
         $file->move($finalPath, $fileName);
         
-        $targetPath = 'files';
+        $targetPath = $filedir;
         MoveFileToRemoteStorage::dispatch ($storage, $targetPath, $finalPath . $fileName, $fileName);
 
         return response()->json([
-            'path' => 'files/',
+            'path' => $filedir,
             'name' => $fileName,
             'mime_type' =>$mime
         ]);
@@ -123,16 +125,14 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function saveFileLocal(UploadedFile $file)
+    protected function saveFileLocal(UploadedFile $file, $filedir)
     {
         $fileName = $this->createFilename($file);
         // Group files by mime type
         $mime = str_replace('/', '-', $file->getMimeType());
-        // Group files by the date (week
-        $dateFolder = date("Y-m-W");
 
         // Build the file path
-        $filePath = "upload/{$mime}/{$dateFolder}/";
+        $filePath = $filedir;
         $finalPath = storage_path("app/".$filePath);
 
         // move the file name

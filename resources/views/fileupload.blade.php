@@ -76,9 +76,11 @@
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
     },
+    params: { filedir: "{{ $filedir ?? '' }}", action: "{{ $action ?? '' }}" 
+    },
     success: function (file, response) {
       if (response.name) {
-        uploadedDocumentMap[file.name] = response.path + response.name
+        uploadedDocumentMap[file.name] = response.path + '/' + response.name
       }
     },
     removedfile: function (file) {

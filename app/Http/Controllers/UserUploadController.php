@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserUploadController extends Controller
 {
@@ -23,6 +24,6 @@ class UserUploadController extends Controller
      */
     public function show(Request $request)
     {
-        return view('fileupload', ['storage' => 'cdn']);
+        return view('fileupload', ['storage' => 'cdn', 'filedir' => 'user' . strval(Auth::user()->id), 'action' => 'SaveDatabase']);
     }
 }
