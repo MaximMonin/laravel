@@ -17,6 +17,19 @@ window.Event = new class {
   emit (event, data = null) { this.vue.$emit (event, data); }
   listen (event, callback) { this.vue.$on (event, callback); }
 }
+// Response errors
+class Errors {
+  constructor () { this.errors = {}; }
+  get (field) { 
+    if (this.errors.[field]) { return this.errors[field].[0]; }
+    return "";
+  }
+  record (errors) { this.errors = errors; }
+  clear (field) { delete this.errors[field]; }
+  has (field) { return this.errors.hasOwnProperty (field); }
+  any () { return Object.keys(this.errors).length > 0; }
+}
+
 
 Vue.component('chat-messages', require('./components/ChatMessages.vue').default);
 Vue.component('chat-form', require('./components/ChatForm.vue').default);
