@@ -58,12 +58,12 @@
 <script>
   var uploadedDocumentMap = {}
   Dropzone.options.documentDropzone = {
-    url: '{{ url("/upload/$storage") }}',
+    url: '{{ url("/upload/$storage") . "?filedir=$filedir&action=$action" }}',
     parallelUploads: 3,
     maxFilesize: 500, // MB
     chunking: true,
     chunkSize: 1000000, // Bytes 
-    parallelChunkUploads: true,
+    parallelChunkUploads: false, // true,
     retryChunks: true,
     retryChunksLimit: 3,
     addRemoveLinks: true,
@@ -75,8 +75,6 @@
     dictRemoveFile: '{{ __("upload.remove") }}',
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
-    },
-    params: { filedir: "{{ $filedir ?? '' }}", action: "{{ $action ?? '' }}" 
     },
     success: function (file, response) {
       if (response.name) {
