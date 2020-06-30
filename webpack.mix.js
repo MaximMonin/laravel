@@ -15,4 +15,4 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .copy('node_modules/dropzone/dist/dropzone.js', 'public/js/dropzone.js')
     .copy('node_modules/dropzone/dist/dropzone.css', 'public/css/dropzone.css')
-    .extract(['jquery', 'bootstrap', 'lodash', 'popper.js', 'vue', 'axios', 'bootstrap-vue', 'vue2-editor']);
+    .extract(['jquery', 'bootstrap', 'lodash', 'popper.js', 'axios', 'vue', 'vue-router', 'bootstrap-vue', 'vue2-editor']);
