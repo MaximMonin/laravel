@@ -120,9 +120,10 @@ export default {
           });
         },
 
-        handleScroll() {
+        handleScroll: _.throttle (function () {
            // Autoload old messages while scrolling up
-           if (this.$refs.id.scrollTop < 500 && this.isLoading == false && this.allPages == false) {
+           if (this.$refs.id.scrollTop < 500 && this.isLoading == false && this.allPages == false) 
+           {
              this.isLoading = true;
              axios.get('/user/chat/messages?page=' + (this.pages + 1) ).then(response => {
                if (response !== null) {
@@ -147,7 +148,7 @@ export default {
                }
              });
            }
-        },
+        }, 1000),
   },
 };
 </script>
