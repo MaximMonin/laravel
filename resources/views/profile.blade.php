@@ -1,5 +1,36 @@
 @extends('layouts.app')
 
+@section('head')
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+    <style>
+	#documentDropzone .message {
+	    font-family: "Segoe UI Light", "Arial", serif;
+	    font-weight: 600;
+	    color: #0087F7;
+	    font-size: 1em;
+	    letter-spacing: 0.05em;
+	}
+ 
+	.dropzone {
+	    border: 2px dashed #0087F7;
+	    background: white;
+	    border-radius: 5px;
+	    min-height: 150px;
+            margin-left: 20px;
+	}
+        .profile-header-img {
+           max-width: 150px;
+           max-height: 150px;
+           margin-right: auto;
+           margin-left: auto;
+       }        
+       .img {
+          width: 150px;
+       }
+
+    </style>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -35,6 +66,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+	               	        <div class="profile-header-img">
+        	                    <img id="avatarimg" class="img" src="{{ $avatar }}" align="middle" width="100%" height="auto" />
+   			        </div>
+		        </div>
+                        <div class="form-group row">
+                            <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Avatar') }}</label>
+                            <input id="avatar" type="hidden" name="avatar" value="{{ $avatar }}">
+                            <div enctype="multipart/form-data" action='{{ url("/upload/local") }}' class="dropzone" id="avatarDropzone">
+                              <div class="dz-message">
+                                 <div class="col-xs-8">
+                                   <div class="message">
+                                      <p>{{ __('Change Avatar') }}</p>
+                                   </div>
+                                 </div>
+                              </div>
+                           </div>
+
+		        </div>
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
@@ -150,3 +200,40 @@
     </div>
 </div>
 @endsection
+@section('js')
+    <script src="{{ asset('js/dropzone.js') }}"></script>
+<script>
+  var uploadedDocumentMap = {}
+  Dropzone.options.avatarDropzone = {
+    url: '{{ url("/upload/local?filedir=cdn/avatar&action=avatar") }}',
+    parallelUploads: 1,
+    maxFilesize: 2, // MB
+    maxFiles: 1, 
+    chunking: false,
+    addRemoveLinks: false,
+    dictFileTooBig: '{{ __("upload.FileTooBig") }}',
+    dictResponseError: '{{ __("upload.error") }}',
+    dictCancelUpload: '{{ __("upload.cancel") }}',
+    dictCancelUploadConfirmation: '{{ __("upload.cancelConfirmation") }}',
+    dictUploadCanceled: '{{ __("upload.canceled") }}',
+    dictRemoveFile: '{{ __("upload.remove") }}',
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    },
+    success: function (file, response) {
+      if (response.name) {
+        document.getElementById('avatarimg').src = "cdn/avatar/" + response.name;
+        document.getElementById('avatar').value = "cdn/avatar/" + response.name;      
+      }
+    },
+    init: function() {
+      this.on('addedfile', function(file) {
+        if (this.files.length > 1) {
+          this.removeFile(this.files[0]);
+        }
+     });
+    } 
+  }
+</script>
+@endsection
+

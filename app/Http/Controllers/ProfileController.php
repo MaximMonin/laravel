@@ -33,6 +33,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
       $user = User::find (request ('id'));
+      $user->avatar = request('avatar');
       $user->name = request('name');
       if ($user->email !== request('email'))
       {
