@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Message extends Model
+class File extends Model
 {
     /**
      * Fields that are mass assignable
      *
      * @var array
      */
-    protected $fillable = ['message', 'files', 'chat_id'];
+    protected $fillable = ['file', 'filename', 'filetype'];
 
     /**
      * A message belong to a user

@@ -36,7 +36,8 @@ class ChatController extends Controller
      */
     public function fetchMessages()
     {
-       return Message::latest()->with('user')->paginate(50)->getCollection();
+       return Message::latest()->with(array('user'=>function($query){
+             $query->select('id','name','avatar');}))->paginate(50)->getCollection();
     }
 
     /**
