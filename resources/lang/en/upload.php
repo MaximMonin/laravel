@@ -9,4 +9,7 @@ return [
     'canceled' => 'Upload Canceled',
     'cancelConfirmation' => 'Are you sure you want to cancel this upload?',
     'remove' => 'Remove File',
+    'InvalidFileType' => 'Invalid file type',
+    'Avatar' => 'Avatar',
+    'ChangeAvatar' => 'Change Avatar',
 ];

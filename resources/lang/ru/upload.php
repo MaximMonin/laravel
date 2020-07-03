@@ -9,4 +9,7 @@ return [
     'canceled' => 'Загрузка прервана',
     'cancelConfirmation' => 'Вы уверены что хотите прервать эту загрузку?',
     'remove' => 'Удалить файл',
+    'InvalidFileType' => 'Неверный тип файла',
+    'Avatar' => 'Аватар',
+    'ChangeAvatar' => 'Изменить аватар',
 ];

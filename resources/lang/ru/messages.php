@@ -27,4 +27,5 @@ return [
     'Search' => 'Поиск',
     'CancelSearch' => 'Отмена',
     'Upload' => 'Загрузить файлы',
+    'Chat' => 'Чат',
 ];

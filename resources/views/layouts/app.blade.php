@@ -28,6 +28,9 @@
             height: 100vh;
             margin: 0;
         }
+       .centered-and-cropped { 
+          object-fit: cover; 
+       }
     </style>
     @yield('head')
 </head>
@@ -61,6 +64,9 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
+                            @if (Auth::user()->avatar)
+                            <img class="centered-and-cropped" width="30" height="30" style="border-radius:50%" src="{{ url(Auth::user()->avatar) }}"> 
+                            @endif
                             <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>

@@ -18,16 +18,6 @@
 	    min-height: 150px;
             margin-left: 20px;
 	}
-        .profile-header-img {
-           max-width: 150px;
-           max-height: 150px;
-           margin-right: auto;
-           margin-left: auto;
-       }        
-       .img {
-          width: 150px;
-       }
-
     </style>
 @endsection
 
@@ -67,18 +57,14 @@
                         </div>
 
                         <div class="form-group row">
-	               	        <div class="profile-header-img">
-        	                    <img id="avatarimg" class="img" src="{{ $avatar }}" align="middle" width="100%" height="auto" />
-   			        </div>
-		        </div>
-                        <div class="form-group row">
-                            <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Avatar') }}</label>
+                            <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('upload.Avatar') }}</label>
                             <input id="avatar" type="hidden" name="avatar" value="{{ $avatar }}">
+                            <img class="centered-and-cropped" id="avatarimg" width="150" height="150" style="border-radius:50%" src="{{ $avatar }}"> 
                             <div enctype="multipart/form-data" action='{{ url("/upload/local") }}' class="dropzone" id="avatarDropzone">
                               <div class="dz-message">
                                  <div class="col-xs-8">
                                    <div class="message">
-                                      <p>{{ __('Change Avatar') }}</p>
+                                      <p>{{ __('upload.ChangeAvatar') }}</p>
                                    </div>
                                  </div>
                               </div>
@@ -211,6 +197,8 @@
     maxFiles: 1, 
     chunking: false,
     addRemoveLinks: false,
+    acceptedFiles: "image/*",
+    dictInvalidFileType: '{{ __("upload.InvalidFileType") }}',
     dictFileTooBig: '{{ __("upload.FileTooBig") }}',
     dictResponseError: '{{ __("upload.error") }}',
     dictCancelUpload: '{{ __("upload.cancel") }}',
