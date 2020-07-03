@@ -2,37 +2,50 @@
   <div class="chat-client-conversation" ref="id" @scroll="handleScroll">
     <ul class="chat">
         <li class="left clearfix" v-for="message in orderedmessages">
-            <div class="chat-body clearfix">
-                <div class="header">
-                    <strong class="primary-font">
-                        {{ message.user.name }}
-                    </strong>
-                </div>
-                <p>
-                    {{ message.message }}
-                </p>
-            </div>
+           <div class="row">
+ 	     <div v-if="(message.user.avatar)">
+               <img class="centered-and-cropped" width="30" height="30" style="border-radius:50%" :src="message.user.avatar"> 
+	     </div>
+	     <div v-else>
+               <b-avatar variant="info" :text="avatartext(message.user.name)"></b-avatar>
+	     </div>
+             <p>
+                  {{ message.message }}
+             </p>
+           </div>
         </li>
     </ul>
   </div>
 </template>
 <style>
+        .centered-and-cropped { 
+           object-fit: cover; 
+        }
         .chat {
             list-style: none;
             margin: 0;
             padding: 0;
         }
         .chat li {
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px dotted #B3A9A9;
+            padding-bottom: 0px;
         }
-        .chat li .chat-body p {
-            margin: 0;
+        .chat li div {
+            margin-left: 1px;
             color: #777777;
         }
+        .row {
+           display: flex;
+           flex-wrap: nowrap;
+        }
+        .chat li p {
+	    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+	    background: white;
+            margin-left: 10px;
+            margin-right: 20px;
+            color: ;
+        }
         .chat-client-conversation {
-           padding: 0 12px;
+           padding: 0 5px;
            overflow-y: auto;
            overflow-x: hidden;
            position: absolute;
@@ -72,7 +85,7 @@ export default {
         return this.orderedmessages[this.messages.length - 1].id;
       }
       return 0;
-    }
+    },
   },
   mounted() {
      this.fetchMessages ();
@@ -101,6 +114,10 @@ export default {
   },
 
   methods: {
+        avatartext: function (name) {
+          return name.split(' ').map(function(str) { return str ? str[0].toUpperCase() : "";}).join('');
+        },
+
         addMessage(message) {
             message.id = this.maxid + 1;
             this.messages.push(message);
@@ -119,7 +136,6 @@ export default {
             }
           });
         },
-
         handleScroll: _.throttle (function () {
            // Autoload old messages while scrolling up
            if (this.$refs.id.scrollTop < 500 && this.isLoading == false && this.allPages == false) 

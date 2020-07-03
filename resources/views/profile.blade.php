@@ -210,8 +210,8 @@
     },
     success: function (file, response) {
       if (response.name) {
-        document.getElementById('avatarimg').src = "cdn/avatar/" + response.name;
-        document.getElementById('avatar').value = "cdn/avatar/" + response.name;      
+        document.getElementById('avatarimg').src = '{{ url("/cdn/avatar") }}' + '/' + response.name;
+        document.getElementById('avatar').value = '{{ url("/cdn/avatar") }}' + '/' + response.name;      
       }
     },
     init: function() {

@@ -11,7 +11,8 @@
         }
         .panel-body {
            position: relative;
-           height: 700px
+           height: 700px;
+           background: aliceblue;
         }
 </style>
 @endsection
@@ -21,7 +22,7 @@
     <div class="row">
         <div class="col-md-12 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Chats</div>
+                <div class="panel-heading">{{ __('messages.Chat') }}</div>
 
                 <div class="border panel-body" id="chatContainer">
                   <chat-messages>
@@ -29,9 +30,7 @@
                   </chat-messages>
                 </div>
                 <div class="panel-footer">
-                    <chat-form
-                        :user="{{ Auth::user() }}"
-                    ></chat-form>
+                    <chat-form :message="{{ __('messages.Chat') }}" :user='{{ Auth::user() }}'/>
                 </div>
             </div>
         </div>
