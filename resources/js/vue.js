@@ -17,6 +17,7 @@ const store = new Vuex.Store({
   state: {
     lang: '',
     user: null,
+    baseurl: '',
   },
   mutations: {
     changelanguage (state, lang) {
@@ -28,6 +29,9 @@ const store = new Vuex.Store({
     logout (state) {
       state.user = null;
     },
+    setbaseurl (state, url) {
+      state.baseurl = url;
+    }
   }
 })
 

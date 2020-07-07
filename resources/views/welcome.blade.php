@@ -65,7 +65,7 @@
 @section('content')
   <div class="container">
     <div class="row">
-      <div class="col-sm-7">
+      <div class="col-md-7">
         <div class="row">
           <img src="/images/milkiland.png"> 
           <div class="title m-b-md">
@@ -73,11 +73,11 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5">
+      <div class="col-md-5">
         @guest
 	  @include ('auth.login2')
         @else
-        <div class="col-sm-8">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">Welcome</div>
 

@@ -16,6 +16,6 @@ class StoreController extends Controller
           $user = Auth::user();
        }
 
-       return ['lang' => App::getLocale(), 'user' => $user];
+       return ['lang' => App::getLocale(), 'user' => $user, 'baseurl' => url ('/')];
     }
 }

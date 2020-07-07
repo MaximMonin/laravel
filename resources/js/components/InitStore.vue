@@ -16,6 +16,7 @@
                 this.$store.commit ('login', response.data.user);
               else
                 this.$store.commit ('logout');
+              this.$store.commit ('setbaseurl', response.data.baseurl);
             }
           });
         },

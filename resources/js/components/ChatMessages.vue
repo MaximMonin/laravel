@@ -2,7 +2,7 @@
   <div class="chat-client-conversation" ref="id" @scroll="handleScroll">
     <ul class="chat">
         <li class="left clearfix" v-for="message in orderedmessages">
-           <div class="row">
+           <div class="chatrow">
  	     <div v-if="(message.user.avatar)">
                <img class="centered-and-cropped" width="30" height="30" style="border-radius:50%" :src="message.user.avatar"> 
 	     </div>
@@ -33,7 +33,7 @@
             margin-left: 1px;
             color: #777777;
         }
-        .row {
+        .chatrow {
            display: flex;
            flex-wrap: nowrap;
         }
