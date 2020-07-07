@@ -1,6 +1,6 @@
 <template>
     <div class="input-group">
-        <input id="btn-input" type="text" name="message" class="form-control input-sm" :placeholder="entertext" v-model="newMessage" @keyup.enter="sendMessage">
+        <b-form-input :placeholder="entertext" v-model="newMessage" @keyup.enter="sendMessage"></b-form-input>
     </div>
 </template>
 

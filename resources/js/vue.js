@@ -31,9 +31,6 @@ const store = new Vuex.Store({
   }
 })
 
-import Vue2Editor from "vue2-editor";
-Vue.use (Vue2Editor);
-
 // Vue event bus
 window.Event = new class {
   constructor () { this.vue = new Vue (); }
