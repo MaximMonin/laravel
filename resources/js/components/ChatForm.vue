@@ -1,6 +1,6 @@
 <template>
     <div class="input-group">
-        <input id="btn-input" type="text" name="message" class="form-control input-sm" placeholder="EnterText" v-model="newMessage" @keyup.enter="sendMessage">
+        <input id="btn-input" type="text" name="message" class="form-control input-sm" :placeholder="entertext" v-model="newMessage" @keyup.enter="sendMessage">
     </div>
 </template>
 
@@ -18,6 +18,10 @@
       lang: function () {
         return this.$store.state.lang;
       },
+      entertext: function () {
+        var text = {en: 'Enter message', ru: "Введите сообщение", uk: "Введіть повідомлення" };
+        return text[this.lang];
+      }
     },
     methods: {
             sendMessage() {
