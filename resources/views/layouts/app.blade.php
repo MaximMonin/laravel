@@ -37,6 +37,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" id="appBar">
+            <init-store></init-store>
             <div class="container">
                 <a href="{{ url('/') }}">
 		  <img src="/images/milkiland_logo.png">

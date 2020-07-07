@@ -67,16 +67,18 @@
 </style>
 <script>
 export default {
-  props: ['user'],
   data: function () {
     return {
       messages: [],
       pages: 0,
       isLoading: false,
-      allPages: false
+      allPages: false,
     }
   },
   computed: {
+    user: function () {
+      return this.$store.state.user;
+    },
     orderedmessages: function () {
       return _.orderBy(this.messages, 'id')
     },

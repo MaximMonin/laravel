@@ -25,12 +25,10 @@
                 <div class="panel-heading">{{ __('messages.Chat') }}</div>
 
                 <div class="border panel-body" id="chatContainer">
-                  <chat-messages>
-                        :user="{{ Auth::user() }}"
-                  </chat-messages>
+                  <chat-messages></chat-messages>
                 </div>
                 <div class="panel-footer">
-                    <chat-form :message="{{ __('messages.Chat') }}" :user='{{ Auth::user() }}'/>
+                  <chat-form></chat-form>
                 </div>
             </div>
         </div>

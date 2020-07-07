@@ -27,6 +27,7 @@ Route::get('/profile', 'ProfileController@show')->middleware('verified')->name('
 Route::post('/profile', 'ProfileController@update')->middleware('verified')->name('saveprofile');
 Route::post('/phone/sendsms', 'PhoneController@sendsms')->middleware('check.session')->name('sendsms');;
 Route::post('/phone/verify', 'PhoneController@verify')->middleware('check.session')->name('phoneverify');
+Route::get('/initstore', 'StoreController@initstore')->name('store');
 
 Route::get('/video', 'VideoController@index')->name('video');
 Route::get('/documentation', 'DocumentationController@index0')->name('documentation');
