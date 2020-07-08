@@ -97,7 +97,8 @@ input[type="file"] {
                     user: this.user,
                     message: this.newMessage,
                     files: this.files,
-                    id: 0
+                    id: 0,
+                    created_at: new Date(),
                   });
         }
         this.newMessage = '';

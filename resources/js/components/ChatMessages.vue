@@ -11,7 +11,11 @@
 	     </div>
              <p>
                   {{ message.message }}
+                  <span class="chattime">
+                     {{ realdate(message.created_at) }}
+                  </span>
              </p>
+             
            </div>
            <div v-if="(message.files)">
              <div class="chatfiles" v-for="file in JSON.parse(message.files)">
@@ -48,12 +52,16 @@
         .chatfiles {
             padding: 5px;
         }
+        .chattime {
+           padding-left: 30px;
+           font-size: 50%;
+        }
         .chat li p {
 	    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
 	    background: white;
             margin-left: 10px;
             margin-right: 20px;
-            color: ;
+            font-size: 100%;
         }
         .chat-client-conversation {
            padding: 0 5px;
@@ -93,6 +101,9 @@ export default {
     orderedmessages: function () {
       return _.orderBy(this.messages, 'id')
     },
+    timezone: function () {
+      return this.$store.state.timezone;  // in minutes (+3 = 180)
+    },
     maxid: function () {
       if (this.orderedmessages !== null && this.messages.length > 0 ) {
         return this.orderedmessages[this.messages.length - 1].id;
@@ -108,7 +119,8 @@ export default {
              id: e.message.id,
              message: e.message.message,
              files: e.message.files,
-             user: e.user
+             created_at: e.message.created_at,
+             user: e.user,
            });
         });
 
@@ -131,13 +143,43 @@ export default {
         avatartext: function (name) {
           return name.split(' ').map(function(str) { return str ? str[0].toUpperCase() : "";}).join('');
         },
-
+        realdate: function (dtstring) {
+           var d = new Date(dtstring);
+           var dt = new Date();
+           if (((dt - d) / 1000 / 60) > 12 * 60 ) { 
+             // More than 12 hours ago 
+             dtstring = this.pad2(d.getDate()) + '-' + this.pad2(d.getMonth()+1) + '-' + d.getFullYear()
+               + ' ' + this.pad2(d.getHours())  + ':' + this.pad2(d.getMinutes());
+             return dtstring;
+           }
+           return this.pad2(d.getHours())  + ':' + this.pad2(d.getMinutes());
+        },
+        pad2: function (number) {
+           var length = 2;
+           var str = '' + number;
+           while (str.length < length) {
+             str = '0' + str;
+           } 
+           return str;
+        },
         addMessage(message) {
             message.id = this.maxid + 1;
             this.messages.push(message);
+
             var files = message.files;
             message.files = JSON.stringify(files);
-            console.log(message);
+
+            var d = message.created_at;
+            var MS_PER_MINUTE = 60000;
+            var dt = new Date(d.getTime() - this.timezone * MS_PER_MINUTE);
+            var dtstring = dt.getFullYear()
+              + '-' + this.pad2(dt.getMonth()+1)
+              + '-' + this.pad2(dt.getDate())
+              + 'T' + this.pad2(dt.getHours())
+              + ':' + this.pad2(dt.getMinutes())
+              + ':' + this.pad2(dt.getSeconds()) + '.000000Z';
+            message.created_at = dtstring;
+
             axios.post('/user/chat/messages', message).then(response => {});
         },
         scrollToBottom () {

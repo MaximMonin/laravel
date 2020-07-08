@@ -18,6 +18,7 @@ const store = new Vuex.Store({
     lang: '',
     user: null,
     baseurl: '',
+    timezone: 0,
   },
   mutations: {
     changelanguage (state, lang) {
@@ -31,7 +32,10 @@ const store = new Vuex.Store({
     },
     setbaseurl (state, url) {
       state.baseurl = url;
-    }
+    },
+    settimezone (state, timezone) {
+      state.timezone = timezone;
+    },
   }
 })
 
