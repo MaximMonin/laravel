@@ -13,6 +13,14 @@
                   {{ message.message }}
              </p>
            </div>
+           <div v-if="(message.files)">
+             <div class="chatfiles" v-for="file in JSON.parse(message.files)">
+                <img v-if="file.mime.match('image*')" class="centered-and-cropped" width="300" height="300" :src="file.url"/> 
+                <a :href="file.url" target="_blank">
+                   {{file.name}}
+                </a>
+             </div>
+           </div>
         </li>
     </ul>
   </div>
@@ -36,6 +44,9 @@
         .chatrow {
            display: flex;
            flex-wrap: nowrap;
+        }
+        .chatfiles {
+            padding: 5px;
         }
         .chat li p {
 	    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
@@ -96,6 +107,7 @@ export default {
            this.messages.push({
              id: e.message.id,
              message: e.message.message,
+             files: e.message.files,
              user: e.user
            });
         });
@@ -123,6 +135,9 @@ export default {
         addMessage(message) {
             message.id = this.maxid + 1;
             this.messages.push(message);
+            var files = message.files;
+            message.files = JSON.stringify(files);
+            console.log(message);
             axios.post('/user/chat/messages', message).then(response => {});
         },
         scrollToBottom () {

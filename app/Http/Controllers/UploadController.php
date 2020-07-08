@@ -89,6 +89,8 @@ class UploadController extends Controller
         $disk = Storage::disk('s3');
         $disk->putFileAs($filedir, $file, $fileName);
         $mime = str_replace('/', '-', $file->getMimeType());
+        $size = $file->getSize();
+        $original = $file->getClientOriginalName();
 
         // We need to delete the file when uploaded to s3
         unlink($file->getPathname());
@@ -96,7 +98,9 @@ class UploadController extends Controller
         return response()->json([
             'path' => $disk->url($fileName),
             'name' => $fileName,
-            'mime_type' =>$mime
+            'mime_type' => $mime,
+            'originalname' => $original,
+            'size' => $size,
         ]);
     }
 
@@ -104,6 +108,8 @@ class UploadController extends Controller
     {
         $fileName = $this->createFilename($file);
         $mime = str_replace('/', '-', $file->getMimeType());
+        $size = $file->getSize();
+        $original = $file->getClientOriginalName();
 
         $finalPath = storage_path("app/chunks/");
         $file->move($finalPath, $fileName);
@@ -114,7 +120,9 @@ class UploadController extends Controller
         return response()->json([
             'path' => $filedir,
             'name' => $fileName,
-            'mime_type' =>$mime
+            'mime_type' =>$mime,
+            'originalname' => $original,
+            'size' => $size,
         ]);
     }
 
@@ -130,6 +138,8 @@ class UploadController extends Controller
         $fileName = $this->createFilename($file);
         // Group files by mime type
         $mime = str_replace('/', '-', $file->getMimeType());
+        $size = $file->getSize();
+        $original = $file->getClientOriginalName();
 
         // Build the file path
         $filePath = $filedir;
@@ -141,7 +151,9 @@ class UploadController extends Controller
         return response()->json([
             'path' => $filePath,
             'name' => $fileName,
-            'mime_type' => $mime
+            'mime_type' => $mime,
+            'originalname' => $original,
+            'size' => $size,
         ]);
     }
 
