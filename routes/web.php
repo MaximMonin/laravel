@@ -45,3 +45,7 @@ Route::get('/file/{storage}/{file}', 'DownloadController@loadfile')->where('file
 Route::get('/user/chat', 'ChatController@index')->middleware('verified')->name('chat');
 Route::get('/user/chat/messages', 'ChatController@fetchMessages');
 Route::post('/user/chat/messages', 'ChatController@sendMessage');
+
+Route::get('/user/photos', 'FilesController@fetchPhotos');
+Route::get('/user/videos', 'FilesController@fetchVideos');
+Route::get('/user/docs', 'FilesController@fetchDocs');
