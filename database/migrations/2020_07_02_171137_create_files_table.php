@@ -20,6 +20,8 @@ class CreateFilesTable extends Migration
             $table->text('filename');
             $table->text('filetype');
             $table->timestamps();
+            $table->index('file');
+            $table->index('filetype');
         });
     }
 

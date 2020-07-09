@@ -53,7 +53,8 @@
        <a class="nav-link" data-toggle="tab" href="#docs">Docs</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" data-toggle="tab" href="#upload">Upload</a>
+       <a class="nav-link" data-toggle="tab" href="#upload" onclick="Dropzone.forElement('#documentDropzone').files.forEach(function(file) { 
+                                                                     file.previewElement.remove(); });">Upload</a>
      </li>
    </ul>
    <div class="tab-content">
