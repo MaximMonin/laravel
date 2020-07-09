@@ -2,22 +2,19 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in! {{$name}}
-                </div>
-            </div>
-        </div>
-    </div>
+   <div class="col-md-12">
+     <h5 class="title-spravka">{{ __('messages.Applications') }}</h5>
+   </div>
+   <div class="container">
+       <div class="links">
+          <a href="https://sumy.milkiland.org">{{ __('ents.Sumy') }}</a>
+       </div>
+       <div class="links">
+          <a href="https://chernigov.milkiland.org">{{ __('ents.Chernigov') }}</a>
+       </div>
+       <div class="links">
+          <a href="https://ioblik.milkiland.org">{{ __('Oblik Saas Docker') }}</a>
+       </div>
+   </div>
 </div>
 @endsection

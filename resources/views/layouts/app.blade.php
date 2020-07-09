@@ -77,7 +77,7 @@
                                     {{ __('messages.Profile') }}
                                 </a>
                                 <a class="dropdown-item" href="{{ route('fileupload') }}">
-                                    {{ __('messages.Upload') }}
+                                    {{ __('messages.Files') }}
                                 </a>
                                 <a class="dropdown-item" href="{{ route('chat') }}">
                                     {{ __('messages.Chat') }}

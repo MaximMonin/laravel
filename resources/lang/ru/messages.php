@@ -26,6 +26,7 @@ return [
     'Find' => 'Найти',
     'Search' => 'Поиск',
     'CancelSearch' => 'Отмена',
-    'Upload' => 'Загрузить файлы',
+    'Files' => 'Мои файлы',
     'Chat' => 'Чат',
+    'Applications' => 'Приложения',
 ];

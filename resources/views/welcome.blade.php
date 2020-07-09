@@ -113,6 +113,15 @@
             </div>
           </div>
         </div>
+        <div class="row">
+	  <div class="flex-center position-ref">
+             <div class="content">
+                <div class="links">
+                    <a href="https://ioblik.milkiland.org">{{ __('Oblik Saas Docker') }}</a>
+                </div>
+            </div>
+          </div>
+        </div>
 
   </div>
 
