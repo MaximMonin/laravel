@@ -29,4 +29,8 @@ return [
     'Files' => 'My Files',
     'Chat' => 'Chat',
     'Applications' => 'Applications',
+    'Photos' => 'Photos',
+    'Videos' => 'Videos',
+    'Docs' => 'Documents',
+    'UploadNew' => 'Upload Files',
 ];

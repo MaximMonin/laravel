@@ -44,17 +44,17 @@
    </div>
    <ul class="nav nav-tabs">
      <li class="nav-item">
-       <a class="nav-link active" data-toggle="tab" href="#photo">Photo</a>
+       <a class="nav-link active" data-toggle="tab" href="#photo">{{ __('messages.Photos') }}</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" data-toggle="tab" href="#video">Video</a>
+       <a class="nav-link" data-toggle="tab" href="#video">{{ __('messages.Videos') }}</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" data-toggle="tab" href="#docs">Docs</a>
+       <a class="nav-link" data-toggle="tab" href="#docs">{{ __('messages.Docs') }}</a>
      </li>
      <li class="nav-item">
        <a class="nav-link" data-toggle="tab" href="#upload" onclick="Dropzone.forElement('#documentDropzone').files.forEach(function(file) { 
-                                                                     file.previewElement.remove(); });">Upload</a>
+                                                                     file.previewElement.remove(); });">{{ __('messages.UploadNew') }}</a>
      </li>
    </ul>
    <div class="tab-content">
