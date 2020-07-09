@@ -191,7 +191,7 @@
 <script>
   var uploadedDocumentMap = {}
   Dropzone.options.avatarDropzone = {
-    url: '{{ url("/upload/local?filedir=cdn/avatar&action=avatar") }}',
+    url: '{{ url("/upload/local?filedir=cdn/avatar") }}',
     parallelUploads: 1,
     maxFilesize: 2, // MB
     maxFiles: 1, 

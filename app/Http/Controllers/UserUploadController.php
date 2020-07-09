@@ -24,6 +24,6 @@ class UserUploadController extends Controller
      */
     public function show(Request $request)
     {
-        return view('fileupload', ['storage' => 'cdn', 'filedir' => 'user' . strval(Auth::user()->id), 'action' => 'SaveDatabase']);
+        return view('fileupload', ['storage' => 'local', 'filedir' => 'cdn/user' . strval(Auth::user()->id), 'action' => 'SaveDatabase']);
     }
 }

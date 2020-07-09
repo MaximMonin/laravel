@@ -11,6 +11,8 @@ use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use App\Jobs\MoveFileToRemoteStorage;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\File;
 
 class UploadController extends Controller
 {
@@ -69,23 +71,31 @@ class UploadController extends Controller
     protected function saveFile($file, $storage, $filedir, $action)
     {
 //       Log::info('savefile: ' . 'storage: ' . $storage . ' file: ' . $file->getClientOriginalName() . " filedir: " . $filedir . " action:" . $action);
+       $original = $file->getClientOriginalName();
+       $mime = str_replace('/', '-', $file->getMimeType());
+       $fileName = $this->createFilename($file);
 
        if ($storage == '' || $storage == 'local') {
-          $rc = $this->saveFileLocal($file, $filedir);
+          $rc = $this->saveFileLocal($file, $filedir, $fileName);
        }  
        elseif ($storage == 's3') { 
-          $rc = $this->saveFileToS3($file, $filedir);
+          $rc = $this->saveFileToS3($file, $filedir, $fileName);
        }
-       else $rc = $this->saveFileRemote($file, $storage, $filedir);
+       else $rc = $this->saveFileRemote($file, $storage, $filedir, $fileName);
 
        if ($action == 'SaveDatabase') {
+         $user = Auth::user();
+
+         $user->files()->create([
+            'file' => $filedir . '/' . $fileName,
+            'filename' => $original,
+            'filetype' => $mime,
+        ]);
        }
        return $rc;
     }
-    protected function saveFileToS3($file, $filedir)
+    protected function saveFileToS3($file, $filedir, $fileName)
     {
-        $fileName = $this->createFilename($file);
-
         $disk = Storage::disk('s3');
         $disk->putFileAs($filedir, $file, $fileName);
         $mime = str_replace('/', '-', $file->getMimeType());
@@ -104,9 +114,8 @@ class UploadController extends Controller
         ]);
     }
 
-    protected function saveFileRemote($file, $storage, $filedir)
+    protected function saveFileRemote($file, $storage, $filedir, $fileName)
     {
-        $fileName = $this->createFilename($file);
         $mime = str_replace('/', '-', $file->getMimeType());
         $size = $file->getSize();
         $original = $file->getClientOriginalName();
@@ -133,9 +142,8 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function saveFileLocal(UploadedFile $file, $filedir)
+    protected function saveFileLocal(UploadedFile $file, $filedir, $fileName)
     {
-        $fileName = $this->createFilename($file);
         // Group files by mime type
         $mime = str_replace('/', '-', $file->getMimeType());
         $size = $file->getSize();
@@ -183,6 +191,9 @@ class UploadController extends Controller
 //       Log::info('deletefile: ' . 'storage: ' . $storage . ' file: ' . $file);
 
         Storage::disk($storage)->delete($file);
+
+        // Delete Database record if exists 
+        File::where('file', $file)->delete();
 
         return response()->json([
             'status' => true

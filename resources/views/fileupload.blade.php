@@ -100,7 +100,7 @@
 <script>
   var uploadedDocumentMap = {}
   Dropzone.options.documentDropzone = {
-    url: '{{ url("/upload/$storage") . "?filedir=$filedir&action=$action" }}',
+    url: '{{ url("/upload/$storage") . "?filedir=$filedir" }}' + '&' + '{{ "action=$action" }}',
     parallelUploads: 3,
     maxFilesize: 500, // MB
     chunking: true,

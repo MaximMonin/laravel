@@ -42,7 +42,11 @@
                 <a href="{{ url('/') }}">
 		  <img src="/images/milkiland_logo.png">
                 </a>
+                @guest
                 <a class="navbar-brand" href="{{ url('/') }}">
+                @else
+                <a class="navbar-brand" href="{{ url('/home') }}">
+                @endif
                     {{ __('messages.MainPage') }}
                 </a>
                 <a class="navbar-brand" href="{{ route('video') }}">
