@@ -28,14 +28,54 @@
 	    padding: 90px 0;
 	    vertical-align: baseline;
 	}
+	.myfiles {
+	    padding: 10px;
+	}
+	.myfiles2 {
+	    padding-top: 10px;
+	}
     </style>
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-sm-10 offset-sm-1">
-            <h2 class="page-heading">{{ __('upload.title') }}<span id="counter"></span></h2>
-            <form method="post" action='{{ url("/upload/$storage") }}'
+<div class="container">
+   <div class="col-md-12">
+     <h5>{{ __('messages.Files') }}</h5>
+   </div>
+   <ul class="nav nav-tabs">
+     <li class="nav-item">
+       <a class="nav-link active" data-toggle="tab" href="#photo">Photo</a>
+     </li>
+     <li class="nav-item">
+       <a class="nav-link" data-toggle="tab" href="#video">Video</a>
+     </li>
+     <li class="nav-item">
+       <a class="nav-link" data-toggle="tab" href="#docs">Docs</a>
+     </li>
+     <li class="nav-item">
+       <a class="nav-link" data-toggle="tab" href="#upload">Upload</a>
+     </li>
+   </ul>
+   <div class="tab-content">
+     <div class="tab-pane fade show active" id="photo">
+       <div class="myfiles2">
+         <my-photo></my-photo>
+       </div>
+     </div>
+     <div class="tab-pane fade" id="video">
+       <div class="myfiles2">
+         <my-video></my-video>
+       </div>
+     </div>
+     <div class="tab-pane fade" id="docs">
+       <div class="myfiles2">
+         <my-docs></my-doc>
+       </div>
+     </div>
+     <div class="tab-pane fade" id="upload">
+       <div class="myfiles">
+         <h5 class="page-heading">{{ __('upload.title') }}</h5>
+         <form method="post" action='{{ url("/upload/$storage") }}'
                   enctype="multipart/form-data" class="dropzone" id="documentDropzone">
                 {{ csrf_field() }}
                 <div class="dz-message">
@@ -48,9 +88,11 @@
                 <div class="fallback">
                     <input type="file" name="file" multiple>
                 </div>
-            </form>
-        </div>
-    </div>
+         </form>
+       </div>
+     </div>
+   </div>
+</div>
 @endsection
 
 @section('js')

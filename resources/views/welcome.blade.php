@@ -99,7 +99,7 @@
 	  <div class="flex-center position-ref">
              <div class="content">
                 <div class="links">
-                    <a href="https://sumy.milkiland.org">{{ __('ents.Sumy') }}</a>
+                    <a href="https://sumy.milkiland.org" target="_blank">{{ __('ents.Sumy') }}</a>
                 </div>
             </div>
           </div>
@@ -108,7 +108,7 @@
 	  <div class="flex-center position-ref">
              <div class="content">
                 <div class="links">
-                    <a href="https://chernigov.milkiland.org">{{ __('ents.Chernigov') }}</a>
+                    <a href="https://chernigov.milkiland.org" target="_blank">{{ __('ents.Chernigov') }}</a>
                 </div>
             </div>
           </div>
@@ -117,7 +117,7 @@
 	  <div class="flex-center position-ref">
              <div class="content">
                 <div class="links">
-                    <a href="https://ioblik.milkiland.org">{{ __('Oblik Saas Docker') }}</a>
+                    <a href="https://ioblik.milkiland.org" target="_blank">{{ __('Oblik Saas Docker') }}</a>
                 </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ window.Vue = require('vue');
 
 import BootstrapVue from 'bootstrap-vue';
 Vue.use(BootstrapVue); 
+
 import VueRouter from 'vue-router';
 Vue.use(VueRouter); 
 
@@ -61,6 +62,9 @@ class Errors {
 Vue.component('init-store', require('./components/InitStore.vue').default);
 Vue.component('chat-messages', require('./components/ChatMessages.vue').default);
 Vue.component('chat-form', require('./components/ChatForm.vue').default);
+Vue.component('my-photo', require('./components/MyPhoto.vue').default);
+Vue.component('my-video', require('./components/MyVideo.vue').default);
+Vue.component('my-docs', require('./components/MyDocs.vue').default);
 
 const app = new Vue({
     el: '#app',
