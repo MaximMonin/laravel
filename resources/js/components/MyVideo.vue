@@ -54,6 +54,9 @@ export default {
      this.fetchFiles ();
      this.pages = parseInt (this.files.length / 20, 10);
      window.addEventListener("scroll", this.handleScroll); 
+     Event.listen('newfileadded', () => {
+       this.updateFiles ();
+     });
   },
   updated() {
      this.pages = parseInt (this.files.length / 20, 10);    
@@ -72,6 +75,13 @@ export default {
               }
             }
           });
+        },
+        updateFiles () {
+          this.files = [];
+          this.pages = 0;
+          this.isLoading = false;
+          this.allPages = false;
+          this.fetchFiles ();
         },
         handleScroll: _.throttle (function () {
            // Autoload new files while scrolling down

@@ -122,6 +122,7 @@
     success: function (file, response) {
       if (response.name) {
         uploadedDocumentMap[file.name] = response.path + '/' + response.name
+        Event.emit('newfileadded', {});
       }
     },
     removedfile: function (file) {
@@ -129,6 +130,7 @@
       var name = ''
       name = uploadedDocumentMap[file.name]
       axios.post('{{ url("/upload/$storage/delete") }}', { 'file': name}).then(response => {});
+      Event.emit('newfileadded', {});
     },
     init: function () {
     }
