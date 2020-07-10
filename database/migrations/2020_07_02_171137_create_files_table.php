@@ -17,8 +17,10 @@ class CreateFilesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('file');
+            $table->text('filepreview')->nullable();
             $table->text('filename');
             $table->text('filetype');
+            $table->text('filesize')->default(0);
             $table->timestamps();
             $table->index('file');
             $table->index('filetype');

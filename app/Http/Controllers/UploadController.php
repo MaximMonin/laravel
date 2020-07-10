@@ -74,6 +74,7 @@ class UploadController extends Controller
        $original = $file->getClientOriginalName();
        $mime = $file->getMimeType();
        $fileName = $this->createFilename($file);
+       $size = $file->getSize();
 
        if ($storage == '' || $storage == 'local') {
           $rc = $this->saveFileLocal($file, $filedir, $fileName);
@@ -90,6 +91,7 @@ class UploadController extends Controller
             'file' => $filedir . '/' . $fileName,
             'filename' => $original,
             'filetype' => $mime,
+            'filesize' => $size,
         ]);
        }
        return $rc;

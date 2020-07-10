@@ -11,7 +11,7 @@ class File extends Model
      *
      * @var array
      */
-    protected $fillable = ['file', 'filename', 'filetype'];
+    protected $fillable = ['file', 'filename', 'filetype', 'filesize', 'filepreview'];
 
     /**
      * A message belong to a user

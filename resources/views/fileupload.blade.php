@@ -34,13 +34,28 @@
 	.myfiles2 {
 	    padding-top: 10px;
 	}
+	.btnupdate {
+	    padding-left: 30px;
+	}
+	.filetop {
+	    padding-bottom: 10px;
+	}
     </style>
 @endsection
 
 @section('content')
 <div class="container">
    <div class="col-md-12">
-     <h5>{{ __('messages.Files') }}</h5>
+     <div class="row filetop">
+       <h4>{{ __('messages.Files') }}</h4>
+       <div class="btnupdate">
+           <button type="button" class="btn btn-primary btn-sm" onclick="event.preventDefault(); Event.emit('newfileadded', {});">{{ __('messages.Update') }}</button>
+       </div>  
+       <div class="form-check ml-auto">
+           <input type="checkbox" class="form-check-input" id="EditMode" onclick="if (this.checked) {Event.emit('fileseditmode', {})} else {Event.emit('filesviewmode', {})};">
+           <label class="form-check-label" for="EditMode">{{ __('messages.EditMode') }}</label>
+       </div>  
+     </div>
    </div>
    <ul class="nav nav-tabs">
      <li class="nav-item">
@@ -122,8 +137,8 @@
     success: function (file, response) {
       if (response.name) {
         uploadedDocumentMap[file.name] = response.path + '/' + response.name
-        Event.emit('newfileadded', {});
       }
+      Event.emit('newfileadded', {});
     },
     removedfile: function (file) {
       file.previewElement.remove()

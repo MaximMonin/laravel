@@ -33,4 +33,6 @@ return [
     'Videos' => 'Videos',
     'Docs' => 'Documents',
     'UploadNew' => 'Upload Files',
+    'Update' => 'Update',
+    'EditMode' => 'Edit Mode',
 ];

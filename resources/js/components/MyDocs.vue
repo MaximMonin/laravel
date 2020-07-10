@@ -1,18 +1,31 @@
 <template>
   <div class="docs-view">
-    <div class="docs" v-for="file in files">
-       <p>
-          {{ file.filename }}
-          {{ file.created_at }}
-       </p>
-
-       <a :href="baseurl + '/' + file.file"/> 
-    </div>
+    <table v-if="files.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>{{ filetext() }}</th>
+          <th>{{ sizetext() }}</th>
+          <th>{{ actiontext() }}</th>
+        </tr>
+      </thead>
+      <tbody v-for="file in files">
+        <tr>
+          <td>{{ file.filename }}</td>
+          <td>{{ Intl.NumberFormat().format(file.filesize / 1024 / 1024) }} Mb</td>
+          <td>
+            <div class="TableFileButton">
+               <a v-if="editmode == false" :href="baseurl + '/' + file.file" target="_blank">{{ opentext() }}</a>
+               <button v-if="editmode == true" type="button" class="btn btn-link btn-sm" @click="removeFile(file)">{{ deltext() }}</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 <style>
-        .centered-and-cropped { 
-           object-fit: cover; 
+        .TableFileButton{
+           text-align:left;
         }
         .docs-view {
            display: flex;
@@ -20,22 +33,6 @@
            overflow-y: auto;
            overflow-x: hidden;
            max-height: 100%;
-        }
-        .docs {
-            margin: 0;
-            padding: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            background-color: #F5F5F5;
-        }
-        ::-webkit-scrollbar {
-            width: 3px;
-            background-color: #F5F5F5;
-        }
-        ::-webkit-scrollbar-thumb {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-            background-color: #555;
         }
 </style>
 <script>
@@ -46,11 +43,15 @@ export default {
       pages: 0,
       isLoading: false,
       allPages: false,
+      editmode: false,
     }
   },
   computed: {
     baseurl: function () {
       return this.$store.state.baseurl;
+    },
+    lang: function () {
+      return this.$store.state.lang;
     },
   },
   mounted() {
@@ -59,6 +60,12 @@ export default {
      window.addEventListener("scroll", this.handleScroll); 
      Event.listen('newfileadded', () => {
        this.updateFiles ();
+     });
+     Event.listen('fileseditmode', () => {
+       this.editmode = true;
+     });
+     Event.listen('filesviewmode', () => {
+       this.editmode = false;
      });
   },
   updated() {
@@ -69,12 +76,42 @@ export default {
      window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+        opentext: function () {
+          var text = {en: 'Open', ru: "Открыть", uk: "Відкрити" };
+          return text[this.lang];
+        },
+        deltext: function () {
+          var text = {en: 'Delete', ru: "Удалить", uk: "Видалити" };
+          return text[this.lang];
+        },
+        filetext: function () {
+          var text = {en: 'Filename', ru: "Имя файла", uk: "Ім'я файлу" };
+          return text[this.lang];
+        },
+        sizetext: function () {
+          var text = {en: 'Size', ru: "Размер", uk: "Розмір" };
+          return text[this.lang];
+        },
+        actiontext: function () {
+          var text = {en: 'Action', ru: "Действие", uk: "Дія" };
+          return text[this.lang];
+        },
         fetchFiles () {
           axios.get('/user/docs').then(response => {
             if (response !== null) {
               var i;
+              var j;
+              var isfound;
               for (i = 0; i < response.data.length; i++) {
-                 this.files.push(response.data[i]);
+                isfound = false;
+                for (j = 0; j < this.files.length; j++) {
+                  if (this.files[j].id == response.data[i].id) {
+                    isfound = true;
+                  }
+                }
+                if (!isfound) {
+                  this.files.push(response.data[i]);
+                }
               }
             }
           });
@@ -85,6 +122,16 @@ export default {
           this.isLoading = false;
           this.allPages = false;
           this.fetchFiles ();
+        },
+        removeFile (file) {
+          axios.post('/upload/local/delete', {file: file.file});
+          var j;
+          for (j = 0; j < this.files.length; j++) {
+            if (this.files[j].id == file.id) {
+               this.files.splice(j, 1);
+               return;
+            }
+          }
         },
         handleScroll: _.throttle (function () {
            // Autoload new files while scrolling down
