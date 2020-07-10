@@ -2,7 +2,7 @@
   <div class="video-view">
     <div class="video" v-for="file in files">
        <video width="320" height="240" controls>
-          <source :src="baseurl + '/' + file.file" :type="file.filetype">
+          <source :src="baseurl + '/' + file.file" :type="file.filetype.replace('-','/')">
        </video>
     </div>
   </div>

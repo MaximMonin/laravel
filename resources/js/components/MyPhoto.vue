@@ -1,7 +1,7 @@
 <template>
   <div class="photos-view">
     <div class="photos" v-for="file in files">
-       <img class="centered-and-cropped" width="200" height="200" :src="baseurl + '/' + file.file"/> 
+       <img class="centered-and-cropped" width="200" height="200" loading="lazy" :src="baseurl + '/' + file.file"/> 
     </div>
   </div>
 </template>
