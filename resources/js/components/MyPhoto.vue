@@ -1,23 +1,108 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Photo Page</div>
-
-                    <div class="panel-body">
-                        I'm an photo component!
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="photos-view">
+    <div class="photos" v-for="file in files">
+       <img class="centered-and-cropped" width="200" height="200" :src="baseurl + '/' + file.file"/> 
     </div>
+  </div>
 </template>
-
-<script>
-    export default {
-        mounted() {
-            console.log('Photo component mounted.')
+<style>
+        .centered-and-cropped { 
+           object-fit: cover; 
         }
+        .photos-view {
+           display: flex;
+           flex-wrap: wrap;
+           overflow-y: auto;
+           overflow-x: hidden;
+           max-height: 100%;
+        }
+        .photos {
+            margin: 0;
+            padding: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+        ::-webkit-scrollbar {
+            width: 3px;
+            background-color: #F5F5F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+</style>
+<script>
+export default {
+  data: function () {
+    return {
+      files: [],
+      pages: 0,
+      isLoading: false,
+      allPages: false,
     }
+  },
+  computed: {
+    baseurl: function () {
+      return this.$store.state.baseurl;
+    },
+  },
+  mounted() {
+     this.fetchFiles ();
+     this.pages = parseInt (this.files.length / 20, 10);
+     window.addEventListener("scroll", this.handleScroll); 
+  },
+  updated() {
+     this.pages = parseInt (this.files.length / 20, 10);    
+     this.isLoading = false;
+  },
+  beforeDestroy() {
+     window.removeEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+        fetchFiles () {
+          axios.get('/user/photos').then(response => {
+            if (response !== null) {
+              var i;
+              for (i = 0; i < response.data.length; i++) {
+                 this.files.push(response.data[i]);
+              }
+            }
+          });
+        },
+        handleScroll: _.throttle (function () {
+           // Autoload new files while scrolling down
+           const scrollY = window.scrollY;
+           const visible = document.documentElement.clientHeight;
+           const pageHeight = document.documentElement.scrollHeight;
+           if (visible + scrollY + 100 >= pageHeight && this.isLoading == false && this.allPages == false) 
+           {
+             this.isLoading = true;
+             axios.get('/user/photos?page=' + (this.pages + 1) ).then(response => {
+               if (response !== null) {
+                 var i;
+                 var j;
+                 var isfound;
+                 // Check files in array already 
+                 for (i = 0; i < response.data.length; i++) {
+                   isfound = false;
+                   for (j = 0; j < this.files.length; j++) {
+                     if (this.files[j].id == response.data[i].id) {
+                       isfound = true;
+                     }
+                   }
+                   if (!isfound) {
+                     this.files.push(response.data[i]);
+                   }
+                 }
+               }
+               if (response == null) {
+                 this.allPages = true;   
+               }
+             });
+           }
+        }, 1000),
+  },
+};
 </script>
