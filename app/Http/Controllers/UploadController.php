@@ -9,7 +9,7 @@ use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use App\Jobs\MoveFileToRemoteStorage;
-
+use App\Jobs\MakeFilePreview;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\File;
@@ -87,12 +87,16 @@ class UploadController extends Controller
        if ($action == 'SaveDatabase') {
          $user = Auth::user();
 
-         $user->files()->create([
+         $newfile = $user->files()->create([
             'file' => $filedir . '/' . $fileName,
             'filename' => $original,
             'filetype' => $mime,
             'filesize' => $size,
         ]);
+        if (substr( $mime, 0, 5 ) === "image" ) {
+          MakeFilePreview::dispatch ($newfile->id);
+        }
+
        }
        return $rc;
     }
@@ -189,9 +193,16 @@ class UploadController extends Controller
     public function uploaddelete(Request $request, $storage) {
         $file = request ('file');
 
-//       Log::info('deletefile: ' . 'storage: ' . $storage . ' file: ' . $file);
+        $delfile = File::firstWhere('file', $file);
 
+//        Log::info('deletefile: ' . 'storage: ' . $storage . ' file: ' . $file);
+//        Log::info('dbfile: ' . json_encode($delfile));
+
+        if ($delfile && $delfile->filepreview) {
+          Storage::disk($storage)->delete($delfile->filepreview);
+        }
         Storage::disk($storage)->delete($file);
+
 
         // Delete Database record if exists 
         File::where('file', $file)->delete();

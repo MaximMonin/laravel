@@ -177,6 +177,7 @@ return [
         Pion\Laravel\ChunkUpload\Providers\ChunkUploadServiceProvider::class,
         App\Providers\NextCloudServiceProvider::class,
         App\Providers\SftpServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -229,6 +230,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Flysystem' => GrahamCampbell\Flysystem\Facades\Flysystem::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
