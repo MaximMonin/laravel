@@ -32,7 +32,7 @@ class FilesController extends Controller
     public function fetchVideos()
     {
        $user = Auth::user();
-       return $user->files()->latest()->whereRaw('filetype IN ("video-mp4", "video-ogg", "video-webm")')->paginate(20)->getCollection();
+       return $user->files()->latest()->whereRaw('filetype IN ("video/mp4", "video/ogg", "video/webm")')->paginate(20)->getCollection();
     }
     /**
      * Fetch all user's Documents
@@ -40,7 +40,7 @@ class FilesController extends Controller
     public function fetchDocs()
     {
        $user = Auth::user();
-       return $user->files()->latest()->whereRaw('NOT (filetype LIKE "image%" or filetype IN ("video-mp4", "video-ogg", "video-webm"))')->paginate(20)->getCollection();
+       return $user->files()->latest()->whereRaw('NOT (filetype LIKE "image%" or filetype IN ("video/mp4", "video/ogg", "video/webm"))')->paginate(20)->getCollection();
     }
 
 }

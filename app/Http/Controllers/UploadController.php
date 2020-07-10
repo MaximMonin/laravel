@@ -72,7 +72,7 @@ class UploadController extends Controller
     {
 //       Log::info('savefile: ' . 'storage: ' . $storage . ' file: ' . $file->getClientOriginalName() . " filedir: " . $filedir . " action:" . $action);
        $original = $file->getClientOriginalName();
-       $mime = str_replace('/', '-', $file->getMimeType());
+       $mime = $file->getMimeType();
        $fileName = $this->createFilename($file);
 
        if ($storage == '' || $storage == 'local') {
@@ -98,7 +98,7 @@ class UploadController extends Controller
     {
         $disk = Storage::disk('s3');
         $disk->putFileAs($filedir, $file, $fileName);
-        $mime = str_replace('/', '-', $file->getMimeType());
+        $mime = $file->getMimeType();
         $size = $file->getSize();
         $original = $file->getClientOriginalName();
 
@@ -116,7 +116,7 @@ class UploadController extends Controller
 
     protected function saveFileRemote($file, $storage, $filedir, $fileName)
     {
-        $mime = str_replace('/', '-', $file->getMimeType());
+        $mime = $file->getMimeType();
         $size = $file->getSize();
         $original = $file->getClientOriginalName();
 
@@ -144,8 +144,7 @@ class UploadController extends Controller
      */
     protected function saveFileLocal(UploadedFile $file, $filedir, $fileName)
     {
-        // Group files by mime type
-        $mime = str_replace('/', '-', $file->getMimeType());
+        $mime = $file->getMimeType();
         $size = $file->getSize();
         $original = $file->getClientOriginalName();
 
