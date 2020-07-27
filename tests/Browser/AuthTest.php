@@ -5,6 +5,7 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\User;
 
 class authenticationTest extends DuskTestCase
 {
@@ -26,5 +27,19 @@ class authenticationTest extends DuskTestCase
                     ->assertGuest();
         });
         $this->user->delete();
+    }
+    public function testAllUserLogin()
+    {
+        $users = User::all();
+        foreach($users as $user) {
+            $this->browse(function ($browser) use ($user) {
+                $browser->loginAs($user)
+                    ->visit('/home')
+                    ->assertSee(__('messages.Applications'))
+                    ->click('@user-button')
+                    ->screenshot('usermenu')
+                    ->click('@logout-button');
+            });
+        }
     }
 }

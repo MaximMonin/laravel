@@ -72,7 +72,7 @@
                             @if (Auth::user()->avatar)
                             <img class="centered-and-cropped" width="30" height="30" style="border-radius:50%" src="{{ url(Auth::user()->avatar) }}"> 
                             @endif
-                            <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" class="navbar-brand dropdown-toggle" dusk="user-button" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
 
@@ -86,7 +86,7 @@
                                 <a class="dropdown-item" href="{{ route('chat') }}">
                                     {{ __('messages.Chat') }}
                                 </a>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                <a class="dropdown-item" dusk="logout-button" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
@@ -99,7 +99,7 @@
                         </li>
                     @endguest
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="navbar-brand dropdown-toggle" dusk="lang-button" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ __('messages.Language') }} <span class="caret"></span>
                         </a>
 
