@@ -2,10 +2,9 @@
 Laravel 7 project consists basic architecture for Laravel7 + Vue.js project
 
 ## Installation
-~~~
-It is pure project w/o laravel kernel libraries. 
-To install enviroment use https://github.com/MaximMonin/laravel-docker project and copy files to laravel-docker ./app catalog.
-~~~
+
+It is pure project w/o laravel kernel libraries.   
+To install enviroment use https://github.com/MaximMonin/laravel-docker project and copy files to laravel-docker ./app catalog.   
 
 ## Description
 
