@@ -30,6 +30,7 @@ class authenticationTest extends DuskTestCase
         $this->user->delete();
     }
 
+/*
     public function testAllUserLogin()
     {            
         $users = User::where('email_verified_at', '!=', null)->get();
@@ -45,7 +46,7 @@ class authenticationTest extends DuskTestCase
             });
         }
     }
-
+*/
     public function testAllNotConfirmedUserLogin()
     {            
         $users = User::where('email_verified_at', '=', null)->get();

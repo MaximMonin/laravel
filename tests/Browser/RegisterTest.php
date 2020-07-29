@@ -5,8 +5,11 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Swift_Events_EventListener;
+use Swift_Events_SendListener;
+use Swift_Events_SendEvent;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use App\User;
 
 class RegisterTest extends DuskTestCase
 {
@@ -16,14 +19,17 @@ class RegisterTest extends DuskTestCase
 
     public function testRegisterForm()
     {
+/*
         $this->setUpMailTracking();
+*/
         $this->faker = \Faker\Factory::create();
         $this->user = [ 'name' => $this->faker->name,
                         'email' => $this->faker->unique()->safeEmail,
-                        'phone' => $this->faker->numerify('############')];
+                        'phone' => $this->faker->numerify('380#########')];
 
         $this->browse(function (Browser $browser) {
-           $browser->visit('/')
+           $browser->logout()
+                    ->visit('/')
                     ->clickLink (__('Register'))
                     ->assertPathIs('/register')
                     ->type('name', $this->user['name'])
@@ -35,26 +41,42 @@ class RegisterTest extends DuskTestCase
                     ->assertPathIs('/email/verify')
                     ->click('@user-button')
                     ->screenshot('register-verify');
-//                    ->click(__('messages.Profile'))
-//                    ->assertPathIs('/email/verify');
 
         });
+        $users = User::where('email', '=', $this->user['email'])->first();
+        $this->assertNotEmpty( $users, 'No user created in database');
 
+        $notification = DB::table('notifications')->where('type' , 'App\Notifications\EmailVerification')
+                                                  ->where('notifiable_id', $users->id)
+                                                  ->latest()->first();
+        $this->assertNotEmpty( $notification, 'No notification created by App/Notification/EmailVerification');
+        $data = json_decode($notification->data);
+        $this->assertNotEmpty( $data->verifylink, 'No verify link provided by App/Notification/EmailVerification');
+
+        $this->browse(function (Browser $browser2) use ($data) {
+            $browser2->visit($data->verifylink)
+                     ->assertPathIs('/home')
+                     ->click('@user-button')
+                     ->screenshot('register-success')
+                     ->click('@logout-button');
+        });
+        DB::table('notifications')->where('id' , $notification->id)->delete();
+        $users->delete();
+
+/* Email verification doesnt work with Laravel Dusk 
         $this->seeEmailWasSent()
              ->seeEmailsSent(1)
              ->seeEmailContains(config('app.name'))
              ->seeEmailContains(__("Verify Email Address"))
              ->seeEmailTo ($this->user-email)
              ->seeEmailSubject(__("Verify Email Address"));
+*/
 
     }
 
     public function setUpMailTracking()
     {     
         Mail::getSwiftMailer()->registerPlugin(new TestingMailEventListener($this));
-
-//        $mailer = $app->make(Mailer::class);
-//        $mailer->registerPlugin(new TestingMailEventListener($this));
     }
 
     /**
@@ -182,17 +204,62 @@ class RegisterTest extends DuskTestCase
     }
 }
 
-class TestingMailEventListener implements Swift_Events_EventListener
+class TestingMailEventListener implements Swift_Events_SendListener
 {
+    /**
+     * @var Swift_Mime_SimpleMessage[]
+     */
+    private $messages;
     protected $test;
 
     public function __construct($test)
     {
         $this->test = $test;
+        $this->messages = [];
     }
 
-    public function beforeSendPerformed($event)
+    /**
+     * Get the message list.
+     *
+     * @return Swift_Mime_SimpleMessage[]
+     */
+    public function getMessages()
     {
-        $this->test->addEmail($event->getMessage());
+        return $this->messages;
+    }
+
+    /**
+     * Get the message count.
+     *
+     * @return int count
+     */
+    public function countMessages()
+    {
+        return count($this->messages);
+    }
+
+    /**
+     * Empty the message list.
+     */
+    public function clear()
+    {
+        $this->messages = [];
+    }
+
+    /**
+     * Invoked immediately before the Message is sent.
+     */
+    public function beforeSendPerformed(Swift_Events_SendEvent $evt)
+    {
+        $this->messages[] = clone $evt->getMessage();
+        $this->test->addEmail($evt->getMessage());
+    }
+
+    /**
+     * Invoked immediately after the Message is sent.
+     */
+    public function sendPerformed(Swift_Events_SendEvent $evt)
+    {
     }
 }
+
