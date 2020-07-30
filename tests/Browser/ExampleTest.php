@@ -18,7 +18,7 @@ class ExampleTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                     ->screenshot('welcome')
-                    ->assertSee('Oblik');
+                    ->assertSee(config('app.name'));
         });
     }
 }

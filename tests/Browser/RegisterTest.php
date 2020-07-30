@@ -49,9 +49,9 @@ class RegisterTest extends DuskTestCase
         $notification = DB::table('notifications')->where('type' , 'App\Notifications\EmailVerification')
                                                   ->where('notifiable_id', $users->id)
                                                   ->latest()->first();
-        $this->assertNotEmpty( $notification, 'No notification created by App/Notification/EmailVerification');
+        $this->assertNotEmpty( $notification, 'No notification created by App\Notification\EmailVerification');
         $data = json_decode($notification->data);
-        $this->assertNotEmpty( $data->verifylink, 'No verify link provided by App/Notification/EmailVerification');
+        $this->assertNotEmpty( $data->verifylink, 'No verify link provided by App\Notification\EmailVerification');
 
         $this->browse(function (Browser $browser2) use ($data) {
             $browser2->visit($data->verifylink)

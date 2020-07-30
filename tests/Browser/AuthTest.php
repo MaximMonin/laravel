@@ -41,12 +41,10 @@ class authenticationTest extends DuskTestCase
                     ->visit('/home')
                     ->assertSee(__('messages.Applications'))
                     ->click('@user-button')
-//                    ->screenshot('usermenu'.$user->id)
                     ->click('@logout-button');
             });
         }
     }
-*/
     public function testAllNotConfirmedUserLogin()
     {            
         $users = User::where('email_verified_at', '=', null)->get();
@@ -61,7 +59,7 @@ class authenticationTest extends DuskTestCase
             });
         }
     }
-
+*/
     public function testLoginLogout()
     {
         $this->user = factory('App\User')->create();
