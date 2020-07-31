@@ -35,4 +35,5 @@ return [
     'UploadNew' => 'Upload Files',
     'Update' => 'Update',
     'EditMode' => 'Edit Mode',
+    'Welcome' => 'Welcome',
 ];
