@@ -10,13 +10,15 @@ use App\User;
 class ChatTest extends DuskTestCase
 {
     protected $user;
+    protected $user2;
+    protected $user3;
 
     public function testBasicInput()
     {
         $this->user = factory('App\User')->create();
         $user = $this->user;
 
-        // Dropzone fileupload
+        // Chat basic test
         $this->browse(function (Browser $browser) use ($user) {
             $browser->logout()
                     ->loginAs($user)
@@ -34,7 +36,8 @@ class ChatTest extends DuskTestCase
                     ->assertSee('video.mp4')
                     ->assertSee('profile.jpg')
                     ->pause (500)
-                    ->screenshot('chat-basic');
+                    ->screenshot('chat-basic')
+                    ->logout();
         });
 
 
@@ -68,41 +71,104 @@ class ChatTest extends DuskTestCase
           }
         }
         $this->user->delete();
+    }
+    public function testVueChatForm()
+    {
+        $this->user = factory('App\User')->create();
+        $user = $this->user;
+
+        // Chacking Vue response
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->logout()
+                    ->loginAs($user)
+                    ->visit('/user/chat')
+                    ->pause (100)
+                    ->assertSourceHas('Введите сообщение')
+                    // Change to english language and check messages
+                    ->click('@lang-button')
+                    ->clickLink('English')
+                    ->pause (100)
+                    ->assertSourceHas('Enter message')
+                    // check Attaching/removing files and tooltip
+                    ->attach('@chatFile', base_path('tests/data/profile.jpg'))
+                    ->attach('@chatFile', base_path('tests/data/video.mp4'))
+                    ->pause (3000)
+                    ->assertSee('Delete (2)')
+                    ->mouseover('@removefiles')
+                    ->assertSee('profile.jpg')
+                    ->assertSee('video.mp4')
+                    ->screenshot('chat-vuetest')
+                    ->click('@removefiles')
+                    ->pause (500)
+                    ->assertDontSee('Delete')
+                    ->logout();
+        });
+        $this->user->delete();
+    }
 
 /*
-        // Checking Photos Videos Docs tabs and check if there is link on pages
-        $this->browse(function (Browser $browser2) use ($user, $photo, $video, $doc) {
-           $browser2->logout()
-                    ->loginAs($user)
-                    ->visit('/user/upload')
-                    ->click('@photo-tab')
-                    ->assertSourceHas($photo->file)
-                    ->assertSourceHas($photo->filepreview)
-                    ->pause (500)
-                    ->screenshot('photos')
-                    ->click('@video-tab')
-                    ->assertSourceHas($video->file)
-                    ->pause (500)
-                    ->screenshot('videos')
-                    ->click('@doc-tab')
-                    ->assertSourceHas($doc->file)
-                    ->pause (500)
-                    ->screenshot('docs');
+    public function testMultiUserChat()
+    {
+        $this->user = factory('App\User')->create();
+        $user = $this->user;
+        $this->user2 = factory('App\User')->create();
+        $user2 = $this->user2;
+        $this->user3 = factory('App\User')->create();
+        $user3 = $this->user3;
+
+        $this->browse(function ($first, $second, $third) use ($user, $user2, $user3) {
+            $first->logout()
+                  ->loginAs($user)
+                  ->visit('/user/chat')
+                  ->pause (100);
+           $second->loginAs($user2)
+                  ->visit('/user/chat')
+                  ->pause (100);
+           $third->loginAs($user3)
+                  ->visit('/user/chat')
+                  ->pause (100);
+
+            $first->type('@chattext', 'We are begging to test multiuser chat')
+                  ->click('@sendMessage')
+                  ->pause (100)
+                  ->type('@chattext', 'This is my test message to everyone')
+                  ->click('@sendMessage')
+                  ->pause (1000);
+
+           $second->assertSee('This is my test message to everyone')
+                  ->type( '@chattext', 'Hey '. $user->name)
+                  ->click('@sendMessage')
+                  ->pause (100)
+                  ->type( '@chattext', 'How are you')
+                  ->click('@sendMessage')
+                  ->pause (1000);
+
+            $first->assertSee('How are you')
+                  ->type( '@chattext', 'Hi '. $user->name)
+                  ->click('@sendMessage')
+                  ->pause (100)
+                  ->type( '@chattext', 'It seems chat is working ok')
+                  ->click('@sendMessage')
+                  ->pause (1000);
+
+
+            $third->assertSee('It seems chat is working ok')
+                  ->type('@chattext', 'Yes I see all messages')
+                  ->click('@sendMessage')
+                  ->pause (1000);
+
+            $first->assertSee('Yes I see all messages')
+                  ->screenshot('chat-user1');
+
+           $second->assertSee('Yes I see all messages')
+                  ->screenshot('chat-user2');
+
+            $third->screenshot('chat-user3');
         });
 
-        // Deleting files and users
-        foreach ($files as $file) {
-          $filename = storage_path('app/' . $file->file);
-          unlink($filename);
-          if ($file->filepreview) {
-            $j++;
-            $filename2 = storage_path('app/' . $file->filepreview);
-            unlink($filename2);
-          }
-        }
-
-        rmdir(storage_path('app/cdn/user' . $this->user->id));
         $this->user->delete();
-*/
+        $this->user2->delete();
+        $this->user3->delete();
     }
+*/
 }
