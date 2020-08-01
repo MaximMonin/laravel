@@ -56,7 +56,7 @@ class MakeFilePreview implements ShouldQueue
         $filename = str_replace(".".$extension, "", $file->filename); // Filename without extension
 
         // Add timestamp hash to name of the file
-        $filename .= "_" . md5(time()) . "." . $extension;
+        $filename .= "_preview_" . md5(time()) . "." . $extension;
         return $dir . '/' . $filename;
     }
 

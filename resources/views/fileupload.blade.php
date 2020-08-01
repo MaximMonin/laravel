@@ -59,16 +59,16 @@
    </div>
    <ul class="nav nav-tabs">
      <li class="nav-item">
-       <a class="nav-link active" data-toggle="tab" href="#photo">{{ __('messages.Photos') }}</a>
+       <a class="nav-link active" dusk="photo-tab" data-toggle="tab" href="#photo">{{ __('messages.Photos') }}</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" data-toggle="tab" href="#video">{{ __('messages.Videos') }}</a>
+       <a class="nav-link" dusk="video-tab" data-toggle="tab" href="#video">{{ __('messages.Videos') }}</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" data-toggle="tab" href="#docs">{{ __('messages.Docs') }}</a>
+       <a class="nav-link" dusk="doc-tab" data-toggle="tab" href="#docs">{{ __('messages.Docs') }}</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" data-toggle="tab" href="#upload" onclick="Dropzone.forElement('#documentDropzone').files.forEach(function(file) { 
+       <a class="nav-link" dusk="upload-tab" data-toggle="tab" href="#upload" onclick="Dropzone.forElement('#documentDropzone').files.forEach(function(file) { 
                                                                      file.previewElement.remove(); });">{{ __('messages.UploadNew') }}</a>
      </li>
    </ul>
