@@ -1,8 +1,8 @@
 <template>
     <div class="input-group">
-        <b-form-input :placeholder="entertext" v-model="newMessage" @keyup.enter="sendMessage"></b-form-input>
+        <b-form-input :placeholder="entertext" dusk="chattext" v-model="newMessage" @keyup.enter="sendMessage"></b-form-input>
         <b-button variant="primary" @click="getfile">📎</b-button>      
-        <b-button id="removefiles" v-if="this.files.length > 0" variant="primary" @click="removeFiles">
+        <b-button id="removefiles" dusk="removefiles" v-if="this.files.length > 0" variant="primary" @click="removeFiles">
         {{ delfiles }}
         </b-button>      
         <b-tooltip v-if="this.files.length > 0" target="removefiles" custom-class="chat-tooltip" triggers="hover">
@@ -11,8 +11,8 @@
              <img v-if="file.mime.match('image*')" class="centered-and-cropped" width="100" height="100" :src="file.url"/> 
           </li>
         </b-tooltip>
-        <input id="file" type="file" @change="uploadFiles" ref="myFiles" multiple="yes"/>
-        <b-button variant="primary" @click="sendMessage">➣</b-button>
+        <input id="file" dusk="chatFile" type="file" @change="uploadFiles" ref="myFiles" multiple="yes"/>
+        <b-button dusk="sendMessage" variant="primary" @click="sendMessage">➣</b-button>
     </div>
 </template>
 <style>
@@ -63,20 +63,40 @@ input[type="file"] {
 
         while ( i < fl) {
           var file = filelist[i];
+          var isfound;
+          var j;
+          isfound = false;
+          for (j = 0; j < this.files.length; j++) {
+            if (this.files[j].name == file.name) {
+               isfound = true;
+            }
+          }
           i++;
-          var formData = new FormData();
-          formData.append("file", file);
-          axios.post('/upload/local?filedir=cdn/chat&action=chat', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-          }).then(response => {
-            this.files.push ({
-               name: response.data.originalname,
-               mime: response.data.mime_type,
-               size: response.data.size,
-               url: this.baseurl + '/cdn/chat/' + response.data.name,
-               removeurl: '/cdn/chat/' + response.data.name,
+          if (!isfound) {
+            var formData = new FormData();
+            formData.append("file", file);
+            axios.post('/upload/local?filedir=cdn/chat&action=chat', formData, {
+                  headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(response => {
+               var isfound;
+               var j;
+               isfound = false;
+               for (j = 0; j < this.files.length; j++) {
+                 if (this.files[j].url == ('/cdn/chat/' + response.data.name) ) {
+                    isfound = true;
+                 }
+               }
+               if (!isfound) {
+                 this.files.push ({
+                    name: response.data.originalname,
+                    mime: response.data.mime_type,
+                    size: response.data.size,
+                    url: /* this.baseurl + */ '/cdn/chat/' + response.data.name,
+                    removeurl: '/cdn/chat/' + response.data.name,
+                 });
+               }
             });
-          });
+          }
         }    
       },
       removeFiles () {
