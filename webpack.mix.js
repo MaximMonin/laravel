@@ -16,3 +16,7 @@ mix.js('resources/js/app.js', 'public/js')
     .copy('node_modules/dropzone/dist/dropzone.js', 'public/js/dropzone.js')
     .copy('node_modules/dropzone/dist/dropzone.css', 'public/css/dropzone.css')
     .extract(['jquery', 'bootstrap', 'lodash', 'popper.js', 'axios', 'vue', 'vue-router', 'vuex', 'bootstrap-vue']);
+
+if (mix.inProduction()) {
+    mix.version();
+}
