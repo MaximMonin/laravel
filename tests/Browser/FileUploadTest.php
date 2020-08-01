@@ -64,13 +64,15 @@ class FileUploadTest extends DuskTestCase
         $this->assertNotEmpty( $doc, 'No document File');
         $this->assertNotEmpty( $photo, 'No image file');
 
-        // Checking Photos Videos Docs tabs and check file detected 
+        // Checking Photos Videos Docs tabs and check if there is link on pages
         $this->browse(function (Browser $browser2) use ($user, $photo, $video, $doc) {
            $browser2->logout()
                     ->loginAs($user)
                     ->visit('/user/upload')
                     ->click('@photo-tab')
                     ->assertSourceHas($photo->file)
+                    ->assertSourceHas($photo->filepreview)
+                    ->pause (500)
                     ->screenshot('photos')
                     ->click('@video-tab')
                     ->assertSourceHas($video->file)
