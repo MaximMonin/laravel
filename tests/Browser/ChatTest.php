@@ -10,8 +10,6 @@ use App\User;
 class ChatTest extends DuskTestCase
 {
     protected $user;
-    protected $user2;
-    protected $user3;
 
     public function testBasicInput()
     {
@@ -72,6 +70,7 @@ class ChatTest extends DuskTestCase
         }
         $this->user->delete();
     }
+
     public function testVueChatForm()
     {
         $this->user = factory('App\User')->create();
@@ -105,61 +104,4 @@ class ChatTest extends DuskTestCase
         });
         $this->user->delete();
     }
-
-/*
-    public function testMultiUserChat()
-    {
-        $this->user = factory('App\User')->create();
-        $user = $this->user;
-        $this->user2 = factory('App\User')->create();
-        $user2 = $this->user2;
-
-        $this->browse(function (Browser $browser, Browser $browser2) use ($user, $user2) {
-          $browser->loginAs($user)
-                  ->visit('/user/chat')
-                  ->pause (100);
-         $browser2->loginAs($user2)
-                  ->visit('/user/chat')
-                  ->pause (100);
-
-          $browser->type('@chattext', 'We are begging to test multiuser chat')
-                  ->click('@sendMessage')
-                  ->pause (100)
-                  ->type('@chattext', 'This is my test message to everyone')
-                  ->click('@sendMessage')
-                  ->pause (1000);
-
-         $browser2->assertSee('This is my test message to everyone')
-                  ->type( '@chattext', 'Hey '. $user->name)
-                  ->click('@sendMessage')
-                  ->pause (100)
-                  ->type( '@chattext', 'How are you')
-                  ->click('@sendMessage')
-                  ->pause (1000);
-
-          $browser->assertSee('How are you')
-                  ->type( '@chattext', 'Hi '. $user2->name)
-                  ->click('@sendMessage')
-                  ->pause (100)
-                  ->type( '@chattext', 'It seems chat is working ok')
-                  ->click('@sendMessage')
-                  ->pause (1000);
-
-         $browser2->assertSee('It seems chat is working ok')
-                  ->type('@chattext', 'Yes I see all messages')
-                  ->click('@sendMessage')
-                  ->pause (1000);
-
-          $browser->assertSee('Yes I see all messages')
-                  ->screenshot('chat-user1');
-
-         $browser2->assertSee('Yes I see all messages')
-                  ->screenshot('chat-user2');
-
-        });
-
-        $this->user->delete();
-        $this->user2->delete();
-    }
-*/
 }
