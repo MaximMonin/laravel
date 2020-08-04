@@ -10,6 +10,7 @@ use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use App\Jobs\MoveFileToRemoteStorage;
 use App\Jobs\MakeFilePreview;
+use App\Jobs\ConvertVideo;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\File;
@@ -95,6 +96,9 @@ class UploadController extends Controller
         ]);
         if (substr( $mime, 0, 5 ) === "image" ) {
           MakeFilePreview::dispatch ($newfile->id);
+        }
+        if (substr( $mime, 0, 5 ) === "video" ) {
+          ConvertVideo::dispatch ($newfile->id);
         }
 
        }

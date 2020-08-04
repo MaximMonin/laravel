@@ -50,8 +50,13 @@ class FileUploadTest extends DuskTestCase
           }
           $i++;
           $filename = storage_path('app/' . $file->file);
-          $this->assertEquals(filesize(base_path('tests/data/' . $file->filename)), filesize($filename), 'source filesize differs from uploaded size');
-          $this->assertEquals(md5_file(base_path('tests/data/' . $file->filename)), md5_file($filename), 'source md5sum differs from uploaded md5sum');
+          // If video converted to mp4/aac it has other size
+          if ($file->filename == 'video.mp4' && strpos($filename, 'convert') !== false) {
+          }
+          else {
+            $this->assertEquals(filesize(base_path('tests/data/' . $file->filename)), filesize($filename), 'source filesize differs from uploaded size');
+            $this->assertEquals(md5_file(base_path('tests/data/' . $file->filename)), md5_file($filename), 'source md5sum differs from uploaded md5sum');
+          }
           if ($file->filepreview) {
             $j++;
             $filename2 = storage_path('app/' . $file->filepreview);
