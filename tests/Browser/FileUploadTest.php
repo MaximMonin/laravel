@@ -90,6 +90,8 @@ class FileUploadTest extends DuskTestCase
         });
 
         // Deleting files and users
+        // Refreshing files if video convertions occurs in test process 
+        $files = $this->user->files()->latest()->paginate(20)->getCollection();
         foreach ($files as $file) {
           $filename = storage_path('app/' . $file->file);
           unlink($filename);
