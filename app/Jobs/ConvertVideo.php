@@ -13,8 +13,6 @@ use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Format\Video\X264;
 
-// use Illuminate\Support\Facades\Log;
-
 class ConvertVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -47,17 +45,21 @@ class ConvertVideo implements ShouldQueue
       if (! $ffprobe->isValid($finalPath . $file->file)) { return; }
 
       $inputformat = $ffprobe->format($finalPath . $file->file); // extracts file informations
-      $secs =  $inputformat->get('duration');                   // returns the duration property
-      $bitrate = $ffprobe->streams($finalPath . $file->file)  // extracts streams informations
-                              ->videos()                      // filters video streams
-                              ->first()                       // returns the first audio stream
-                              ->get('bit_rate') / 1024;  
-      $abitrate = $ffprobe->streams($finalPath . $file->file) // extracts streams informations
-                              ->audios()                      // filters audio streams
-                              ->first()                       // returns the first audio stream
-                              ->get('bit_rate') / 1024;  
+      $secs =  $inputformat->get('duration');                    // returns the duration property
+      $vstream = $ffprobe->streams($finalPath . $file->file)     // extracts streams informations
+                              ->videos()                         // filters video streams
+                              ->first();
+      if (!$vstream) { return; }                                 // no video stream in input file
+      $bitrate = $vstream->get('bit_rate') / 1024;               // video bitrate
 
-//      Log::info('audio-bitrate: ' . $abitrate . ' duration: ' . $secs . " bitrate: " . $bitrate);
+      $astream = $ffprobe->streams($finalPath . $file->file)  // extracts streams informations
+                              ->audios()                      // filters audio streams
+                              ->first();                      // returns the first audio stream
+
+      $abitrate = 256;
+      if ($astream) {
+        $abitrate = $vstream->get('bit_rate') / 1024;         // audio bitrate
+      }
 
       if ($bitrate > 1000) {
         $bitrate = 1000;
@@ -66,7 +68,7 @@ class ConvertVideo implements ShouldQueue
         $abitrate = 256;
       }
 
-      $ffmpeg = FFMpeg::create(['timeout' => 3600, 'ffmpeg.threads'   => 12, ]);
+      $ffmpeg = FFMpeg::create(['timeout' => 3600, 'ffmpeg.threads' => 12, ]);
       $video_name = $this->createFileMP4 ($finalPath, $file);
 
       $video = $ffmpeg->open($finalPath . $file->file);
